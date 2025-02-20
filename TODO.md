@@ -17,17 +17,42 @@
 
 ## Subgoals
 
-- urls needed:
-  - get pokemon
-  - get all pokemon: to display list at the start: maybe store this and do something to make searching easier
-  - get all of a type
-  - get all types: as a bonus entry
+- write api that passes the info on
+- start on the svelt frontend
+
+## TODO
+
+- settup bruno
+- settup faspi calls
+- do pokeapi calls
+
+- do typehints for glom
 
 ## Notes
 
+- get all pokemon: to display list at the start: maybe store this and do something to make searching easier
 - get picture: try to use official adn default as fallback
   - on-hover: display shiny?
+  - preload types pictures
+  - rotate when there are different superficial formas in a subspecies
+
+- `pip freeze | ForEach-Object {pip uninstall -y $_}`
+- `fastapi run .\main.py --host 127.0.0.1 --port 8080 --reload`
 
 ## Time
 
-- 15.20 Start: settup
+- 15.20 - 16.20 : settup and first test
+- 16.20 - 18.00 : reading up on pokemon species, evolution and hero forms
+- 21.50 - 23.10 : typing the existing code, prepearing all calls to pokeapi
+- 23.10 - 03.10 : finished test and calls to pokeapi
+- 3.10 - 3.50 : propper dependancies
+
+- 17.00 : fastapi
+
+Categorys:
+
+- settup: 1.40
+- understanding: 1.40
+- pokeapi: 5.20
+- fastapi
+- svelte

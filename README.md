@@ -4,7 +4,7 @@
 
 a small app to show pokemon from pokeapi
 
-## Run Dev
+## Settup + Run Dev
 
 Windows:
 
@@ -13,6 +13,10 @@ cd .\backend
 python -m venv .venv
 .venv\Scripts\Activate
 pip install -r .\requirements-dev.txt
+```
+
+```powershell
+fastapi run .\app\main.py --host 127.0.0.1 --port 8080 --reload
 ```
 
 Other:
@@ -24,16 +28,24 @@ source .venv/bin/activate
 pip install -r ./requirements-dev.txt
 ```
 
+```bash
+fastapi run ./app/main.py --host 127.0.0.1 --port 8080 --reload
+```
+
 ## Run Tests
 
 Windows:
 
 ```powershell
-pytest .\backend\test\
+cd .\backend
+pytest
+mypy .\app
 ```
 
 Other:
 
 ```bash
-pytest ./backend/test
+cd ./backend
+pytest
+mypy ./app
 ```
