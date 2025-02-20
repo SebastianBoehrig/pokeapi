@@ -1,0 +1,4 @@
+pokeapi_base_url: https://pokeapi.co/api/v2
+pokeapi_pokemon_path: pokemon
+pokeapi_species_path: pokemon-species
+pokeapi_type_path: type

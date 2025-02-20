@@ -14,5 +14,3 @@ def get_all_pokemon():
     pprint(response.json())
     pokemon_obj=response.json()['results']
     return [pokemon['name'] for pokemon in pokemon_obj]
-
-pprint(get_all_pokemon())
