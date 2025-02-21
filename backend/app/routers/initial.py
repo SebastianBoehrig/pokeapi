@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from typing import Set
-import pokeapi_requests
+import app.pokeapi_requests as pokeapi_requests
 from pprint import pprint
 
 router: APIRouter = APIRouter(prefix='/initial', responses={404: {'description': 'Not found'}})

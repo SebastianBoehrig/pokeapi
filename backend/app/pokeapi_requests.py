@@ -1,6 +1,6 @@
 import requests
 from typing import TypedDict, List, Set
-from config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
+from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
 from glom import glom, Iter
 
 

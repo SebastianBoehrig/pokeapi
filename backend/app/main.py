@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from typing import Dict
-from routers.initial import router as initial_router
-from pokeapi_requests import api_online
+from app.routers.initial import router as initial_router
+from app.pokeapi_requests import api_online
 
 app: FastAPI = FastAPI()
 
