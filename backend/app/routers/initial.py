@@ -5,8 +5,9 @@ from pprint import pprint
 
 router: APIRouter = APIRouter(prefix='/initial', responses={404: {'description': 'Not found'}})
 
-@router.get('/types')
+
+@router.get('/types', response_model=Set[str] | None)
 def get_all_types() -> Set[str] | None:
-    a=pokeapi_requests.get_all_types()
+    a: Set[str] | None = pokeapi_requests.get_all_types()
     pprint(a)
     return a

@@ -9,12 +9,12 @@ class PokemonListEntry(TypedDict):
     url: str
 
 
-class Pokemon(TypedDict):
+class SpeciesSubtypes(TypedDict):
     default: str
     other: List[str]
 
 
-class SpeciesSubtypes(TypedDict):
+class Pokemon(TypedDict, total=False):
     name: str
     weight: int
     height: int
