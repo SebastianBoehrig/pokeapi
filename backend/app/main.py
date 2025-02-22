@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from typing import Dict
 from app.routers.initial import router as initial_router
+from app.routers.pokemon import router as pokemon_router
 from app.pokeapi_requests import api_online
 
 app: FastAPI = FastAPI()
@@ -12,3 +13,4 @@ async def root() -> Dict[str, str]:
     return {"description": f"Backend up and running, pokeapi is {pokeapi_state}"}
 
 app.include_router(initial_router)
+app.include_router(pokemon_router)
