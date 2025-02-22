@@ -4,7 +4,13 @@
 
 a small app to show pokemon from pokeapi
 
-## Settup + Run Dev
+## Settup + Run Prod
+
+```bash
+docker compose up --build
+```
+
+## Backend Settup + Run Dev
 
 Windows:
 
@@ -48,4 +54,28 @@ Other:
 cd ./backend
 pytest
 mypy ./app
+```
+
+## Frontend Settup + Run Dev
+
+Windows:
+
+```powershell
+cd .\frontend
+npm install
+```
+
+```powershell
+npm run dev
+```
+
+Other:
+
+```bash
+cd ./frontend
+npm install
+```
+
+```bash
+npm run dev
 ```
