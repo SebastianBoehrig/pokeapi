@@ -108,4 +108,4 @@ def get_pokemon_of_type(type: str) -> Set[str] | None:
 # 'ogerpon-hearthflame-mask'
 # 'ogerpon-cornerstone-mask'
 
-# 'burmy'
+# 'burmy'ocker

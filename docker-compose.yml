@@ -1,0 +1,28 @@
+services:
+  backend:
+    build: ./backend
+    #image: backend
+    container_name: backend
+    ports:
+      - "8181:8181"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    #image: frontend
+    container_name: frontend
+    ports:
+      - "8080:3000"
+    environment:
+      - BACKEND_URL=http://backend:8181
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+# docker-compose up -d --build

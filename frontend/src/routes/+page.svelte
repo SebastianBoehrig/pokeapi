@@ -12,7 +12,7 @@
 
 	function search() {
 		console.log('searching for:' + searchString);
-		let a = fetch('https://pokeapi.co/api/v2/pokemon/' + searchString)
+		let a = fetch('http://127.0.0.1:8181/pokemon/' + searchString)
 			.then((response) => response.json())
 			.then((obj) => {
                 console.log(obj)

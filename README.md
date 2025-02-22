@@ -16,7 +16,7 @@ pip install -r .\requirements-dev.txt
 ```
 
 ```powershell
-fastapi run .\app\main.py --host 127.0.0.1 --port 8080 --reload
+fastapi run .\app\main.py --host 127.0.0.1 --port 8181 --reload
 ```
 
 Other:
@@ -29,7 +29,7 @@ pip install -r ./requirements-dev.txt
 ```
 
 ```bash
-fastapi run ./app/main.py --host 127.0.0.1 --port 8080 --reload
+fastapi run ./app/main.py --host 127.0.0.1 --port 8181 --reload
 ```
 
 ## Run Tests
