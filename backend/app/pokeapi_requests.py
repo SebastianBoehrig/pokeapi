@@ -1,8 +1,8 @@
 import requests
 from typing_extensions import TypedDict
-from typing import List, Set
+from typing import List, Set, Union, Dict
 from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
-from glom import glom, Iter
+from glom import glom, Iter, Coalesce
 from pprint import pprint
 
 
@@ -16,17 +16,47 @@ class SpeciesSubtypes(TypedDict):
     other: List[str]
 
 
-class Pokemon(TypedDict, total=False):
+class TypePokemon(TypedDict):
+    slot: int
+    pokemon: PokemonListEntry
+
+
+class PokemonType(TypedDict):
+    slot: int
+    type: PokemonListEntry
+
+
+class RawPokemon(TypedDict, total=False):
     name: str
     weight: int
     height: int
+    types: list[PokemonType]
+    sprites: Dict[str, Union[str, Dict[str, Dict[str, str]]]]
+
+
+class SpriteLinks(TypedDict):
+    default: str
+    shiny: str
+
+
+class Pokemon(TypedDict):
+    name: str
+    weight: int
+    height: int
+    types: set[str]
+    img: SpriteLinks
+
+
+class SpeciesVarieties(TypedDict):
+    is_default: bool
+    pokemon: PokemonListEntry
 
 
 def api_online() -> bool:
     response: requests.Response = requests.get(POKEAPI_BASE_URL)
     if response.status_code != 200:
         return False
-    return True  # TODO: Test
+    return True
 
 
 def get_all_pokemon() -> Set[str] | None:
@@ -52,30 +82,35 @@ def get_pokemon_of_species(species: str) -> SpeciesSubtypes | None:
     if response.status_code != 200:
         return None
 
-    species_obj = response.json()
+    species_obj: list[SpeciesVarieties] = response.json()['varieties']
     return glom(
         species_obj,
         {
-            # this assumes that there can only be one first item
-            'default': ('varieties', Iter().filter(lambda p: p['is_default']).first(), 'pokemon.name'),
-            'other': ('varieties', Iter().filter(lambda p: not p['is_default']).all(), ['pokemon.name']),
+            # this assumes that there can only be one default pokemon
+            'default': (Iter().filter(lambda p: p['is_default']).first(), 'pokemon.name'),
+            'other': (Iter().filter(lambda p: not p['is_default']).all(), ['pokemon.name']),
         },
         default=None,
     )
 
 
 def get_single_pokemon(name: str) -> Pokemon | None:
-    response: requests.Response = requests.get(f'{POKEAPI_POKEMON_URL}/{name}')  # TODO: get all from .env
+    response: requests.Response = requests.get(f'{POKEAPI_POKEMON_URL}/{name}')  # TODO do .gets
     if response.status_code != 200:
         return None
 
-    full_pokemon: Pokemon = response.json()
+    raw_pokemon: RawPokemon = response.json()
     return glom(
-        full_pokemon,
+        raw_pokemon,
         {
             'name': 'name',
             'weight': 'weight',
             'height': 'height',
+            'types': ('types', ['type.name'], set),
+            'img': {
+                'default': Coalesce('sprites.other.official-artwork.front_default', 'sprites.front_default', None),
+                'shiny': Coalesce('sprites.other.official-artwork.front_shiny', 'sprites.front_shiny', None),
+            },
         },
     )
 
@@ -94,11 +129,9 @@ def get_pokemon_of_type(type: str) -> Set[str] | None:
     if response.status_code != 200:
         return None
 
-    full_type: Pokemon = response.json()
-    return glom(full_type, ('pokemon', ['pokemon.name'], set))
+    pokemon_type_list: list[TypePokemon] = response.json()['pokemon']
+    return {entry['pokemon']['name'] for entry in pokemon_type_list}
 
-
-# pprint(get_pokemon_of_type('water'))
 
 # 'palafin-zero'
 # 'palafin-hero'

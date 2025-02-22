@@ -97,11 +97,45 @@ def test_get_pokemon_of_species_empty(mock_requests):
 
 def test_get_single_pokemon(mock_requests):
     mock_response = MagicMock(status_code=200)
-    mock_response.json = lambda: {'name': 'ditto', 'weight': 40, 'height': 3}
+    mock_response.json = lambda: {
+        'name': 'scyther',
+        'weight': 560,
+        'height': 15,
+        'types': [{'slot': 1, 'type': {'name': 'bug', 'url': 'ignore'}}, {'type': {'name': 'flying'}}],
+        'sprites': {'other': {'official-artwork': {'front_default': 'default_url', 'front_shiny': 'shiny_url'}}},
+    }
 
     mock_requests.get.return_value = mock_response
 
-    assert pokeapi_requests.get_single_pokemon('ditto') == {'name': 'ditto', 'weight': 40, 'height': 3}
+    assert pokeapi_requests.get_single_pokemon('ditto') == {
+        'name': 'scyther',
+        'weight': 560,
+        'height': 15,
+        'types': {'bug', 'flying'},
+        'img': {'default': 'default_url', 'shiny': 'shiny_url'},
+    }
+    mock_requests.get.assert_called_with(f'{config.POKEAPI_POKEMON_URL}/ditto')
+
+
+def test_get_single_pokemon_no_official_art(mock_requests):
+    mock_response = MagicMock(status_code=200)
+    mock_response.json = lambda: {
+        'name': 'scyther',
+        'weight': 560,
+        'height': 15,
+        'types': [{'type': {'name': 'bug'}}],
+        'sprites': {'front_default': 'default_url', 'front_shiny': 'shiny_url'},
+    }
+
+    mock_requests.get.return_value = mock_response
+
+    assert pokeapi_requests.get_single_pokemon('ditto') == {
+        'name': 'scyther',
+        'weight': 560,
+        'height': 15,
+        'types': {'bug'},
+        'img': {'default': 'default_url', 'shiny': 'shiny_url'},
+    }
     mock_requests.get.assert_called_with(f'{config.POKEAPI_POKEMON_URL}/ditto')
 
 

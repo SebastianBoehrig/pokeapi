@@ -18,7 +18,8 @@ def get_all_types(name: str) -> list[Pokemon | None]:
     species_subtypes: SpeciesSubtypes | None = pokeapi_requests.get_pokemon_of_species(name)
     if species_subtypes is None:
         return []
-    result: list[Pokemon | None] = [pokeapi_requests.get_single_pokemon(species_subtypes.get('default', {}))]
+    default: str | None = species_subtypes.get('default')
+    result: list[Pokemon | None] = [pokeapi_requests.get_single_pokemon(default) if default else None]
     result.extend(pokeapi_requests.get_single_pokemon(name) for name in species_subtypes.get('other', {}))
 
     return result
