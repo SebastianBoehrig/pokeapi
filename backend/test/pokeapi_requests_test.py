@@ -149,6 +149,39 @@ def test_get_all_types(mock_requests):
     mock_requests.get.assert_called_with(f'{config.POKEAPI_TYPE_URL}/{config.HIGH_LIMIT}')
 
 
+def test_get_img_of_type(mock_requests):
+    mock_response = MagicMock(status_code=200)
+    mock_response.json = lambda: {'sprites': {'generation-ix': {'scarlet-violet': {'name_icon': 'value'}}}}
+
+    mock_requests.get.return_value = mock_response
+
+    assert pokeapi_requests.get_img_of_type('water') == 'value'
+    mock_requests.get.assert_called_with(f'{config.POKEAPI_TYPE_URL}/water/{config.HIGH_LIMIT}')
+
+
+def test_get_img_of_type_fallback(mock_requests):
+    mock_response = MagicMock(status_code=200)
+    mock_response.json = lambda: {
+        'sprites': {
+            'generation-ix': {'scarlet-violet': {'name_icon': None}},
+            'generation-iv': {'platinum': {'name_icon': 'value'}},
+        }
+    }
+
+    mock_requests.get.return_value = mock_response
+
+    assert pokeapi_requests.get_img_of_type('water') == 'value'
+
+
+def test_get_img_of_type_none(mock_requests):
+    mock_response = MagicMock(status_code=200)
+    mock_response.json = lambda: {'sprites': {'generation-ix': {'scarlet-violet': {'name_icon': None}}}}
+
+    mock_requests.get.return_value = mock_response
+
+    assert pokeapi_requests.get_img_of_type('water') is None
+
+
 def test_get_pokemon_of_type(mock_requests):
     mock_response = MagicMock(status_code=200)
     mock_response.json = lambda: {

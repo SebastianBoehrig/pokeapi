@@ -50,7 +50,7 @@
 
 	function addPokemon(pokemon: Pokemon) {
 		PokeQueue.update((queue) => {
-			if (queue.size > 3) {
+			if (queue.size > 3) { //TODO: 16
 				queue.dequeue();
 			}
 			queue.enqueue(pokemon);

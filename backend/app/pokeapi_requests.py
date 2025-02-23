@@ -16,12 +16,12 @@ class SpeciesSubtypes(TypedDict):
     other: List[str]
 
 
-class TypePokemon(TypedDict):
+class RawTypePokemon(TypedDict):
     slot: int
     pokemon: PokemonListEntry
 
 
-class PokemonType(TypedDict):
+class RawPokemonType(TypedDict):
     slot: int
     type: PokemonListEntry
 
@@ -30,7 +30,7 @@ class RawPokemon(TypedDict, total=False):
     name: str
     weight: int
     height: int
-    types: list[PokemonType]
+    types: list[RawPokemonType]
     sprites: Dict[str, Union[str, Dict[str, Dict[str, str]]]]
 
 
@@ -108,8 +108,12 @@ def get_single_pokemon(name: str) -> Pokemon | None:
             'height': 'height',
             'types': ('types', ['type.name'], set),
             'img': {
-                'default': Coalesce('sprites.other.official-artwork.front_default', 'sprites.front_default', None),
-                'shiny': Coalesce('sprites.other.official-artwork.front_shiny', 'sprites.front_shiny', None),
+                'default': Coalesce(
+                    'sprites.other.official-artwork.front_default', 'sprites.front_default', default=None, skip=None
+                ),
+                'shiny': Coalesce(
+                    'sprites.other.official-artwork.front_shiny', 'sprites.front_shiny', default=None, skip=None
+                ),
             },
         },
     )
@@ -124,12 +128,28 @@ def get_all_types() -> Set[str] | None:
     return {species['name'] for species in species_obj}
 
 
+def get_img_of_type(type: str) -> str | None:
+    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
+    if response.status_code != 200:
+        return None
+
+    return glom(
+        response.json(),
+        (
+            'sprites',
+            Coalesce(
+                'generation-ix.scarlet-violet.name_icon', 'generation-iv.platinum.name_icon', default=None, skip=None
+            ),
+        ),
+    )
+
+
 def get_pokemon_of_type(type: str) -> Set[str] | None:
     response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
     if response.status_code != 200:
         return None
 
-    pokemon_type_list: list[TypePokemon] = response.json()['pokemon']
+    pokemon_type_list: list[RawTypePokemon] = response.json()['pokemon']
     return {entry['pokemon']['name'] for entry in pokemon_type_list}
 
 
@@ -141,4 +161,8 @@ def get_pokemon_of_type(type: str) -> Set[str] | None:
 # 'ogerpon-hearthflame-mask'
 # 'ogerpon-cornerstone-mask'
 
-# 'burmy'ocker
+# 'burmy'
+
+# 'charizard'
+
+# 2 or 9
