@@ -5,6 +5,6 @@
 	}>();
 </script>
 
-<button {onclick} class="my-button">
+<button {onclick}>
 	Toggle me, currently: {searchMode}
 </button>

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import PokemonCard from './pokemonCard.svelte';
+	import TypeCard from './typeCard.svelte';
 	import ModeToggle from './modeToggle.svelte';
 	import { Queue } from 'mnemonist';
 	import { writable, derived } from 'svelte/store';
 	import { onMount } from 'svelte';
+	import type { Pokemon, TypesType } from './types';
 
 	// Toggle Mode:
 	let searchMode: 'single' | 'species' | 'type' = $state('species');
@@ -13,10 +15,6 @@
 	}
 
 	// Types:
-	type TypesType = {
-		name: string;
-		img: string;
-	};
 	let allTypes: TypesType[] | null = $state(null);
 
 	onMount(() => {
@@ -34,23 +32,15 @@
 	});
 
 	// PokeQueue:
-	type Pokemon = {
-		name: string;
-		weight: string;
-		height: string;
-		types: string[];
-		img: {
-			default: string;
-			shiny: string;
-		};
-	};
 
 	const PokeQueue = writable(new Queue<Pokemon>());
 	const pokemonQueueArray = derived(PokeQueue, ($queue) => $queue.toArray());
 
 	function addPokemon(pokemon: Pokemon) {
 		PokeQueue.update((queue) => {
-			if (queue.size > 3) { //TODO: 16
+			//TODO: deduplicate and possibly CircularBuffer
+			if (queue.size > 3) {
+				//TODO: 16
 				queue.dequeue();
 			}
 			queue.enqueue(pokemon);
@@ -63,7 +53,11 @@
 	let searchString: string = $state('');
 
 	function search() {
-		searchMode === 'single' ? searchSingle() : searchSpecies();
+		if (searchMode === 'species') {
+			searchSpecies();
+		} else if (searchMode === 'single') {
+			searchSingle();
+		}
 	}
 
 	function searchSingle() {
@@ -93,6 +87,21 @@
 				console.log(error);
 			});
 	}
+
+	function searchType() {
+		console.log('searching for:' + searchString);
+		fetch(`http://localhost:8181/pokemon/species/${searchString}`) //TODO: replace with Proxy in svelte, url from env/yml
+			.then((response) => response.json())
+			.then((obj: Pokemon[]) => {
+				obj.forEach((pokemon: Pokemon) => {
+					addPokemon(pokemon);
+				});
+			})
+			.catch((error) => {
+				console.log(`Error during http://localhost:8181/pokemon/${searchString}:`);
+				console.log(error);
+			});
+	}
 </script>
 
 <h1>pokeapi wrapper</h1>
@@ -102,8 +111,7 @@
 
 {#if allTypes}
 	{#each allTypes as type}
-		{type.name}
-		{type.img}
+		<TypeCard onclick={() => searchType()} {type} />
 		<br />
 	{/each}
 {:else}

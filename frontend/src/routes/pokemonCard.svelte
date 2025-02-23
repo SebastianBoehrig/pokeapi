@@ -1,11 +1,15 @@
 <script lang="ts">
-	let { name = null, weight = null, height = null, types = null, img = null } = $props();
+	import type { Pokemon } from './types';
+
+	interface Props extends Pokemon {}
+	let pokemon: Pokemon = $props();
 </script>
 
-<p>{name}</p>
-<p>{weight} {height}</p>
-<p>{types}</p>
-<img src={img.default} alt={`picture of ${name}`} />
+<p>{pokemon.name}</p>
+<p>{pokemon.weight} {pokemon.height}</p>
+<p>{pokemon.types}</p>
+<img src={pokemon.img.default} alt={`picture of ${pokemon.name}`} />
+
 <!-- TODO: on hover -->
 <style>
 	p {
