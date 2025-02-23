@@ -1,22 +1,66 @@
 <script lang="ts">
 	import PokemonCard from './pokemonCard.svelte';
 	import ModeToggle from './modeToggle.svelte';
+	import { Queue } from 'mnemonist';
+	import { writable, derived } from 'svelte/store';
+	import { onMount } from 'svelte';
 
-	let searchMode: 'single' | 'species' = $state('species');
+	// Toggle Mode:
+	let searchMode: 'single' | 'species' | 'type' = $state('species');
 
 	function switchMode() {
-		searchMode = searchMode === 'single' ? 'species' : 'single';
+		searchMode = searchMode === 'species' ? 'single' : 'species';
 	}
 
-	let searchString: string = $state('');
+	// Types:
+	type TypesType = {
+		name: string;
+		img: string;
+	};
+	let allTypes: TypesType[] | null = $state(null);
 
-	let pokemon = $state({
-		name: 'ditto',
-		weight: '1',
-		height: '1',
-		types: ['1', '1'],
-		img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png'
+	onMount(() => {
+		fetch('http://localhost:8181/initial/types')
+			.then((response) => response.json())
+			.then((obj: TypesType[]) => {
+				console.log('Types:');
+				console.log(obj);
+				allTypes = obj;
+			})
+			.catch((error) => {
+				console.log(`Error during http://localhost:8181/initial/types:`); //TODO: improve logging for potentila user
+				console.log(error);
+			});
 	});
+
+	// PokeQueue:
+	type Pokemon = {
+		name: string;
+		weight: string;
+		height: string;
+		types: string[];
+		img: {
+			default: string;
+			shiny: string;
+		};
+	};
+
+	const PokeQueue = writable(new Queue<Pokemon>());
+	const pokemonQueueArray = derived(PokeQueue, ($queue) => $queue.toArray());
+
+	function addPokemon(pokemon: Pokemon) {
+		PokeQueue.update((queue) => {
+			if (queue.size > 3) {
+				queue.dequeue();
+			}
+			queue.enqueue(pokemon);
+			console.log(queue.toArray());
+			return queue;
+		});
+	}
+
+	// Search:
+	let searchString: string = $state('');
 
 	function search() {
 		searchMode === 'single' ? searchSingle() : searchSpecies();
@@ -24,40 +68,57 @@
 
 	function searchSingle() {
 		console.log('searching for:' + searchString);
-		let a = fetch(`http://127.0.0.1:8181/pokemon/${searchString}`)
+		fetch(`http://localhost:8181/pokemon/${searchString}`) //TODO: replace with Proxy in svelte, url from env/yml
 			.then((response) => response.json())
-			.then((obj) => {
-				console.log(obj);
-				pokemon = obj;
+			.then((obj: Pokemon) => {
+				addPokemon(obj);
 			})
-			.catch((error) => console.log(error));
-		console.log(a);
+			.catch((error) => {
+				console.log(`Error during http://localhost:8181/pokemon/${searchString}:`);
+				console.log(error);
+			});
 	}
 
 	function searchSpecies() {
 		console.log('searching for:' + searchString);
-		let a = fetch(`http://127.0.0.1:8181/pokemon/${searchString}`)
+		fetch(`http://localhost:8181/pokemon/species/${searchString}`) //TODO: replace with Proxy in svelte, url from env/yml
 			.then((response) => response.json())
-			.then((obj) => {
-				console.log(obj);
-				pokemon = obj;
+			.then((obj: Pokemon[]) => {
+				obj.forEach((pokemon: Pokemon) => {
+					addPokemon(pokemon);
+				});
 			})
-			.catch((error) => console.log(error));
-		console.log(a);
+			.catch((error) => {
+				console.log(`Error during http://localhost:8181/pokemon/${searchString}:`);
+				console.log(error);
+			});
 	}
 </script>
 
 <h1>pokeapi wrapper</h1>
 
 <h2>sidebar</h2>
-<ModeToggle onclick={switchMode} searchMode={searchMode} />
+<ModeToggle onclick={switchMode} {searchMode} />
+
+{#if allTypes}
+	{#each allTypes as type}
+		{type.name}
+		{type.img}
+		<br />
+	{/each}
+{:else}
+	<p>Loading...</p>
+{/if}
 
 <h2>main</h2>
 <div>
 	<input type="search" bind:value={searchString} />
 	<button onclick={() => search()}>search</button>
 
-	<PokemonCard {...pokemon} />
+	{#each $pokemonQueueArray as pokeQueueEntry}
+		<PokemonCard {...pokeQueueEntry} />
+		<br />
+	{/each}
 </div>
 
 <style>
