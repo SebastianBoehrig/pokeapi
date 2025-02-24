@@ -10,6 +10,8 @@ a small app to show pokemon from pokeapi
 docker compose up --build
 ```
 
+the go to `http://localhost:8080`
+
 ## Backend Settup + Run Dev
 
 Windows:

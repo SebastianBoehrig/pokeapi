@@ -2,7 +2,6 @@
 	let { searchMode } = $props<{
 		searchMode: 'Pokemon-Search' | 'Type-search';
 	}>();
-	console.log(searchMode);
 </script>
 
 <div>

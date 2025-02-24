@@ -6,10 +6,16 @@
 	import { onMount } from 'svelte';
 	import type { PokemonDetail, PokemonPrimitive, TypesType } from './types';
 	import ModeIndicator from './modeIndicator.svelte';
+	import PokemonModalContent from './pokemonModalContent.svelte';
+	import Teest from './teest.svelte';
 
 	// Toggle Mode:
 	let searchMode: 'Pokemon-Search' | 'Type-search' = $state('Pokemon-Search');
 	let showModal: boolean = $state(false);
+	function changeShowModal(b: boolean) {
+		console.log(`setting showmodal to ${b}`);
+		showModal = b;
+	}
 
 	// Types:
 	let allTypes: TypesType[] | null = $state(null);
@@ -46,8 +52,7 @@
 				loadingStateSearch = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/primitives/${searchString}:`);//Handle 404s/500s
-				console.log(error); //TODO: show some kind of error popup
+				console.log(`Error during /pokemon/primitives/${searchString}:\n${error}`); //Handle 404s/500s//TODO: show some kind of error popup
 				loadingStateSearch = false;
 			});
 	}
@@ -64,8 +69,7 @@
 				loadingStateSearch = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/primitives/${searchString}:`);
-				console.log(error); //TODO: show some kind of error popup
+				console.log(`Error during /pokemon/type/${typeName}:\n${error}`);//TODO: show some kind of error popup
 				loadingStateSearch = false;
 			});
 	}
@@ -73,15 +77,14 @@
 	function searchSelectPokemon(pokemonName: string) {
 		loadingStateSelect = true;
 		console.log(`searchSelecting for: ${pokemonName}`);
-		fetch(`http://localhost:8181/pokemon/detail/${searchString}`) //TODO: replace with Proxy in svelte, url from env/yml
+		fetch(`http://localhost:8181/pokemon/detail/${pokemonName}`) //TODO: replace with Proxy in svelte, url from env/yml
 			.then((response: Response) => response.json())
 			.then((obj: PokemonDetail) => {
 				pokemon = obj;
 				loadingStateSelect = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/detail/${searchString}:`);
-				console.log(error); //TODO: show some kind of error popup
+				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`);//TODO: show some kind of error popup
 				loadingStateSelect = false;
 			});
 	}
@@ -90,6 +93,11 @@
 <h1>pokeapi wrapper</h1>
 
 <h2>sidebar</h2>
+<Teest
+	func={(a: string) => {
+		console.log(a);
+	}}
+/>
 <ModeIndicator {searchMode} />
 
 {#if allTypes}
@@ -122,11 +130,15 @@
 	{/if}
 </div>
 
-<PokemonDetailModal bind:showModal>
-	<ol class="definition-list">
-		<li>Anything</li>
-		<li>Can go here</li>
-	</ol>
+<PokemonDetailModal {showModal} {changeShowModal}>
+	<PokemonModalContent
+		{loadingStateSelect}
+		{pokemon}
+		{allTypes}
+		{changeShowModal}
+		serchType={(type: string) => searchPokemonByType(type)}
+		searchDetail={(pokemonName: string) => searchSelectPokemon(pokemonName)}
+	/>
 </PokemonDetailModal>
 
 <style>

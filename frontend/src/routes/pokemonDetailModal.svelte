@@ -1,29 +1,35 @@
-<script>
-	let { showModal = $bindable(), children } = $props();
+<script lang="ts">
+	let { showModal, changeShowModal, children } = $props<{
+		showModal: boolean;
+		changeShowModal: (b: boolean) => void;
+		children: any;
+	}>();
 
-	let dialog = $state();
+	let dialog: any = $state(); //TODO: figure types out
 
 	$effect(() => {
 		if (showModal) dialog.showModal();
+		if (showModal == false) dialog.close();
 	});
 </script>
 
 <dialog
 	bind:this={dialog}
-	onclose={() => (showModal = false)}
+	onclose={changeShowModal(false)}
 	onclick={(e) => {
-		if (e.target === dialog) dialog.close();
+		if (e.target === dialog) changeShowModal(false);
 	}}
 >
 	<div>
 		{@render children?.()}
-		<button autofocus onclick={() => dialog.close()}>close modal</button>
+		<button autofocus onclick={() => changeShowModal(false)}>close modal</button>
 	</div>
 </dialog>
 
 <style>
 	dialog {
-		max-width: 32em;
+		/* max-width: 32em; */
+		width: 50rem;
 		border-radius: 0.2em;
 		border: none;
 		padding: 0;
