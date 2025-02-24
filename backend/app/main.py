@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from typing import Dict
 from app.routers.initial import router as initial_router
 from app.routers.pokemon import router as pokemon_router
 from app.pokeapi_requests import api_online
@@ -16,7 +15,7 @@ app.add_middleware(
 
 
 @app.get('/')
-async def root() -> Dict[str, str]:
+async def root() -> dict[str, str]:
     pokeapi_state: str = 'Running' if api_online() else 'Offline'
     return {'description': f'Backend up and running, pokeapi is {pokeapi_state}'}
 

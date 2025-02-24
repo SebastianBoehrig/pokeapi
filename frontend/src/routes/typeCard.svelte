@@ -12,7 +12,7 @@
 
 <style>
 	button {
-		max-width: 30rem;
-		max-height: 30rem;
+		max-width: 20rem;
+		max-height: 10rem;
 	}
 </style>
