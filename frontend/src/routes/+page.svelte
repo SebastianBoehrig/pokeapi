@@ -2,7 +2,6 @@
 	import PokemonPrimitiveCard from './pokemonPrimitiveCard.svelte';
 	import PokemonDetailModal from './pokemonDetailModal.svelte';
 	import TypeCard from './typeCard.svelte';
-	import { Queue } from 'mnemonist'; //TODO: cleanup
 	import { onMount } from 'svelte';
 	import type { PokemonDetail, PokemonPrimitive, TypesType } from './types';
 	import ModeIndicator from './modeIndicator.svelte';
@@ -26,7 +25,7 @@
 				allTypes = obj;
 			})
 			.catch((error) => {
-				console.log(`Error during http://localhost:8181/initial/types:`); //TODO: improve logging for potentila user
+				console.log(`Error during http://localhost:8181/initial/types:`); //TODO: improve logging for potential user
 				console.log(error);
 			});
 	});
@@ -61,14 +60,14 @@
 		searchMode = 'Type-search';
 		searchString = typeName;
 		console.log(`searching for: ${typeName}`);
-		fetch(`http://localhost:8181/pokemon/type/${typeName}`) //TODO: replace with Proxy in svelte, url from env/yml
+		fetch(`http://localhost:8181/pokemon/type/${typeName}`)
 			.then((response: Response) => response.json())
 			.then((obj: PokemonPrimitive[]) => {
 				pokemonPrimitiveArray = obj;
 				loadingStateSearch = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/type/${typeName}:\n${error}`); //TODO: show some kind of error popup
+				console.log(`Error during /pokemon/type/${typeName}:\n${error}`);
 				loadingStateSearch = false;
 			});
 	}
@@ -76,14 +75,14 @@
 	function searchSelectPokemon(pokemonName: string) {
 		loadingStateSelect = true;
 		console.log(`searchSelecting for: ${pokemonName}`);
-		fetch(`http://localhost:8181/pokemon/detail/${pokemonName}`) //TODO: replace with Proxy in svelte, url from env/yml
+		fetch(`http://localhost:8181/pokemon/detail/${pokemonName}`)
 			.then((response: Response) => response.json())
 			.then((obj: PokemonDetail) => {
 				pokemon = obj;
 				loadingStateSelect = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`); //TODO: show some kind of error popup
+				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`);
 				loadingStateSelect = false;
 			});
 	}

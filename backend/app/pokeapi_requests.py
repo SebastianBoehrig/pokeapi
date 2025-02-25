@@ -3,11 +3,8 @@ import requests
 from typing_extensions import TypedDict
 from typing import Union, Dict
 from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
-from glom import glom, Coalesce
 from fastapi import HTTPException
 
-
-# TODO: replace NOne checks with error 500
 class PokemonListEntry(TypedDict):
     name: str
     url: str
@@ -93,7 +90,7 @@ def get_pokemon(name: str) -> RawPokemon:
 def get_type(type: str) -> RawType:
     response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
     if response.status_code != 200:
-        raise HTTPException(status_code=404, detail=f'{type} not found, (get_pokemon_of_type)')
+        raise HTTPException(status_code=404, detail=f'{type} not found, (get_type)')
     return response.json()
 
 
@@ -113,10 +110,6 @@ def get_all_types() -> PokemonList:
         raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_types)')
     return response.json()
 
-
-######
-
-
 def get_all_pokemon_species() -> PokemonList:
     # TODO: maybe a optimization for a dropdown for searching
     response: requests.Response = requests.get(f'{POKEAPI_SPECIES_URL}/{HIGH_LIMIT}')
@@ -124,18 +117,3 @@ def get_all_pokemon_species() -> PokemonList:
         raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_pokemon_species)')
 
     return response.json()
-
-
-# 'palafin-zero'
-# 'palafin-hero'
-
-# 'ogerpon'
-# 'ogerpon-wellspring-mask'
-# 'ogerpon-hearthflame-mask'
-# 'ogerpon-cornerstone-mask'
-
-# 'burmy'
-
-# 'charizard'
-
-# 'eternatus' has ??? type, but not in api
