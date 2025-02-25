@@ -119,7 +119,6 @@
 				}}
 				{pokemonPrimitive}
 			/>
-			<br />
 		{/each}
 	{/if}
 </div>

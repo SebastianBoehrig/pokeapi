@@ -63,7 +63,7 @@ class RawType(TypedDict, total=False):
 
 
 class PokemonList:
-    result: list[PokemonListEntry]
+    results: list[PokemonListEntry]
 
 
 def api_online() -> bool:

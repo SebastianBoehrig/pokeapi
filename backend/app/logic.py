@@ -133,11 +133,11 @@ def get_pokemon_primitive_of_type(type_name: str) -> list[PokemonPrimitive]:
 
 
 def get_types() -> list[TypesType]:
-    type_list: list[str] = [species['name'] for species in get_all_types()]
+    type_list: list[str] = [species['name'] for species in get_all_types().get('results', {})]
     result: list[TypesType] = []
     for type in type_list:
         img: str | None = glom(
-            get_type(),
+            get_type(type),
             (
                 'sprites',
                 Coalesce(
