@@ -10,6 +10,24 @@
 		serchType: (type: string) => void;
 		searchDetail: (pokemonName: string) => void;
 	}>();
+
+	function get_types() {
+		console.log('called');
+		if (allTypes == null || pokemon == null) return [];
+		let result: TypesType[] = [];
+		for (let type of pokemon.types) {
+			for (let at of allTypes) {
+				if (at.name == type) {
+					console.log('arrived with ' + at.name);
+					console.log(result);
+					result.push(at);
+					console.log(result);
+					break;
+				}
+			}
+		}
+		return result;
+	}
 </script>
 
 <div>
@@ -24,11 +42,9 @@
 			height = {pokemon.height}
 			<br />
 			weight = {pokemon.weight}
-			<br />
-			types = {pokemon.types}
 		</p>
 		<hr />
-		{#each allTypes as type}
+		{#each get_types() as type}
 			<TypeCard
 				onclick={() => {
 					changeShowModal(false);

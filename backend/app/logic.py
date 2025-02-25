@@ -99,7 +99,6 @@ def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
     if evolution_url:
         chain: EvolutionChain = get_evolution_chain(evolution_url)
         evolution_tree = _extract_evolution_tree(chain)
-    pprint(evolution_tree)
     # Build return Object
 
     return {
@@ -180,9 +179,7 @@ def _extract_img_from_raw_pokemon_sprites(
 
 
 def _extract_evolution_tree(chain_root: EvolutionChain) -> EvolutionTree | None:
-    pprint(chain_root)
     if not chain_root.get('evolves_to'):
-        pprint('no evolves to')
         return None
     try:
         return _resolve_tree_recursive(chain_root)
@@ -193,7 +190,6 @@ def _extract_evolution_tree(chain_root: EvolutionChain) -> EvolutionTree | None:
 
 def _resolve_tree_recursive(chain: EvolutionChain) -> EvolutionTree:
     name: str = chain.get('species').get('name')
-    pprint(f'curreltly {name}')
     primitive: PokemonPrimitive = get_pokemon_primitive(name)
 
     if not chain.get('evolves_to'):
