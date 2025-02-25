@@ -18,10 +18,7 @@
 		for (let type of pokemon.types) {
 			for (let at of allTypes) {
 				if (at.name == type) {
-					console.log('arrived with ' + at.name);
-					console.log(result);
 					result.push(at);
-					console.log(result);
 					break;
 				}
 			}
