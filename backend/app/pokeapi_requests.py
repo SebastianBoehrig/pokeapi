@@ -5,6 +5,7 @@ from typing import Union, Dict
 from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
 from fastapi import HTTPException
 
+
 class PokemonListEntry(TypedDict):
     name: str
     url: str
@@ -109,6 +110,7 @@ def get_all_types() -> PokemonList:
     if response.status_code != 200:
         raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_types)')
     return response.json()
+
 
 def get_all_pokemon_species() -> PokemonList:
     # TODO: maybe a optimization for a dropdown for searching

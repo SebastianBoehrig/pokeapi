@@ -55,7 +55,10 @@
 		<hr />
 		{#if pokemon}
 			{#if pokemon.evolutionTree}
-				<RecursiveTreeNode evolutionTree={pokemon.evolutionTree} />
+				<p>
+					{JSON.stringify(pokemon.evolutionTree)}
+				</p>
+				<!-- <RecursiveTreeNode evolutionTree={pokemon.evolutionTree} /> -->
 			{:else}
 				<p>No Evolutions</p>
 			{/if}
