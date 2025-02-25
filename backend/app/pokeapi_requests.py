@@ -5,7 +5,6 @@ from typing import Union, Dict
 from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
 from glom import glom, Coalesce
 from fastapi import HTTPException
-from pprint import pprint
 
 
 # TODO: replace NOne checks with error 500

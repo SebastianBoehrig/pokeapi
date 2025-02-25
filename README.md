@@ -47,7 +47,7 @@ Windows:
 ```powershell
 cd .\backend
 pytest
-mypy .\app
+pyright .\app\
 ```
 
 Other:
@@ -55,7 +55,7 @@ Other:
 ```bash
 cd ./backend
 pytest
-mypy ./app
+pyright ./app
 ```
 
 ## Frontend Settup + Run Dev
