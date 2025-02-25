@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PokemonDetail, TypesType } from './types';
 	import TypeCard from './typeCard.svelte';
+	import RecursiveTreeNode from './recursiveTreeNode.svelte';
 	let { loadingStateSelect, pokemon, allTypes, changeShowModal, searchDetail, serchType } = $props<{
 		loadingStateSelect: boolean;
 		pokemon: PokemonDetail | null;
@@ -39,7 +40,13 @@
 		<hr />
 		<p>Forms</p>
 		<hr />
-		<p>Evolutions</p>
+		{#if pokemon}
+			{#if pokemon.evolutionTree}
+				<RecursiveTreeNode evolutionTree={pokemon.evolutionTree} />
+			{:else}
+				<p>No Evolutions</p>
+			{/if}
+		{/if}
 	{/if}
 </div>
 

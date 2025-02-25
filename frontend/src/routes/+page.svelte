@@ -7,7 +7,6 @@
 	import type { PokemonDetail, PokemonPrimitive, TypesType } from './types';
 	import ModeIndicator from './modeIndicator.svelte';
 	import PokemonModalContent from './pokemonModalContent.svelte';
-	import Teest from './teest.svelte';
 
 	// Toggle Mode:
 	let searchMode: 'Pokemon-Search' | 'Type-search' = $state('Pokemon-Search');
@@ -69,7 +68,7 @@
 				loadingStateSearch = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/type/${typeName}:\n${error}`);//TODO: show some kind of error popup
+				console.log(`Error during /pokemon/type/${typeName}:\n${error}`); //TODO: show some kind of error popup
 				loadingStateSearch = false;
 			});
 	}
@@ -84,7 +83,7 @@
 				loadingStateSelect = false;
 			})
 			.catch((error) => {
-				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`);//TODO: show some kind of error popup
+				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`); //TODO: show some kind of error popup
 				loadingStateSelect = false;
 			});
 	}
@@ -93,11 +92,6 @@
 <h1>pokeapi wrapper</h1>
 
 <h2>sidebar</h2>
-<Teest
-	func={(a: string) => {
-		console.log(a);
-	}}
-/>
 <ModeIndicator {searchMode} />
 
 {#if allTypes}
@@ -112,6 +106,7 @@
 
 <input type="search" bind:value={searchString} />
 <button onclick={() => searchPokemon()}>search</button>
+
 <div>
 	{#if loadingStateSearch === true}
 		<p>Searching...</p>

@@ -18,7 +18,7 @@
 	}
 
 	img {
-		max-width: 12rem;
-		max-height: 12rem;
+		width: 12rem;
+		height: 12rem;
 	}
 </style>
