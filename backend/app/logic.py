@@ -9,9 +9,10 @@ from app.pokeapi_requests import (
     RawPokemonType,
     RawType,
     Varieties,
+    get_all_types,
     get_evolution_chain,
     get_pokemon,
-    get_pokemon_of_type,
+    get_type,
     get_pokemon_species,
 )
 from fastapi import HTTPException
@@ -43,6 +44,11 @@ class PokemonDetail(TypedDict):
     varietieTypes: list[PokemonPrimitive]
     cosmeticTypes: list[PokemonPrimitive] | None
     evolutionTree: EvolutionTree | None
+
+
+class TypesType(TypedDict):
+    name: str
+    img: str
 
 
 def get_pokemon_primitive(species_name: str) -> PokemonPrimitive:
@@ -109,7 +115,7 @@ def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
 
 
 def get_pokemon_primitive_of_type(type_name: str) -> list[PokemonPrimitive]:
-    type: RawType = get_pokemon_of_type(type_name)
+    type: RawType = get_type(type_name)
 
     pokemon_name_list: list[str] = []
     for raw_type_pokemon in type.get('pokemon', {}):
@@ -123,6 +129,27 @@ def get_pokemon_primitive_of_type(type_name: str) -> list[PokemonPrimitive]:
 
         pokemonImg: PokemonImg = _extract_img_from_raw_pokemon_sprites(pokemon.get('sprites', {}))
         result.append({'name': name, 'img': pokemonImg.get('default')})
+    return result
+
+
+def get_types() -> list[TypesType]:
+    type_list: list[str] = [species['name'] for species in get_all_types()]
+    result: list[TypesType] = []
+    for type in type_list:
+        img: str | None = glom(
+            get_type(),
+            (
+                'sprites',
+                Coalesce(
+                    'generation-ix.scarlet-violet.name_icon',
+                    'generation-iv.platinum.name_icon',
+                    default=None,
+                    skip=None,
+                ),
+            ),
+        )
+        if img:
+            result.append({'name': type, 'img': img})
     return result
 
 

@@ -62,7 +62,11 @@ class RawTypePokemon(TypedDict):
 
 class RawType(TypedDict, total=False):
     pokemon: list[RawTypePokemon]
-    sprites: Dict[str, Dict[str, Dict[str, str]]]
+    sprites: dict[str, dict[str, dict[str, str]]]
+
+
+class PokemonList:
+    result: list[PokemonListEntry]
 
 
 def api_online() -> bool:
@@ -86,7 +90,7 @@ def get_pokemon(name: str) -> RawPokemon:
     return response.json()
 
 
-def get_pokemon_of_type(type: str) -> RawType:
+def get_type(type: str) -> RawType:
     response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
     if response.status_code != 200:
         raise HTTPException(status_code=404, detail=f'{type} not found, (get_pokemon_of_type)')
@@ -103,50 +107,23 @@ def get_evolution_chain(url: str) -> EvolutionChain:
     return chain
 
 
+def get_all_types() -> PokemonList:
+    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{HIGH_LIMIT}')
+    if response.status_code != 200:
+        raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_types)')
+    return response.json()
+
+
 ######
 
 
-def get_all_pokemon() -> set[str] | None:
-    response: requests.Response = requests.get(f'{POKEAPI_POKEMON_URL}/{HIGH_LIMIT}')
-    if response.status_code != 200:
-        return None  # TODO: maybe a optimization for a dropdown for searching
-
-    pokemon_obj: list[PokemonListEntry] = response.json()['results']
-    return {pokemon['name'] for pokemon in pokemon_obj}
-
-
-def get_all_pokemon_species() -> set[str] | None:
+def get_all_pokemon_species() -> PokemonList:
+    # TODO: maybe a optimization for a dropdown for searching
     response: requests.Response = requests.get(f'{POKEAPI_SPECIES_URL}/{HIGH_LIMIT}')
     if response.status_code != 200:
-        return None  # TODO: do i need this?
+        raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_pokemon_species)')
 
-    species_obj: list[PokemonListEntry] = response.json()['results']
-    return {species['name'] for species in species_obj}
-
-
-def get_all_types() -> list[str] | None:
-    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{HIGH_LIMIT}')
-    if response.status_code != 200:
-        return None
-
-    species_obj: list[PokemonListEntry] = response.json()['results']
-    return [species['name'] for species in species_obj]
-
-
-def get_img_of_type(type: str) -> str | None:
-    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
-    if response.status_code != 200:
-        return None
-
-    return glom(
-        response.json(),
-        (
-            'sprites',
-            Coalesce(
-                'generation-ix.scarlet-violet.name_icon', 'generation-iv.platinum.name_icon', default=None, skip=None
-            ),
-        ),
-    )
+    return response.json()
 
 
 # 'palafin-zero'
