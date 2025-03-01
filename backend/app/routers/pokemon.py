@@ -1,9 +1,10 @@
 from fastapi import APIRouter
+
 from app.logic import (
     PokemonDetail,
     PokemonPrimitive,
-    get_pokemon_primitive,
     get_pokemon_detail,
+    get_pokemon_primitive,
     get_pokemon_primitive_of_type,
 )
 

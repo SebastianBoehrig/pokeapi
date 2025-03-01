@@ -1,9 +1,12 @@
 from __future__ import annotations
+
+from typing import Dict, Union
+
 import requests
-from typing_extensions import TypedDict
-from typing import Union, Dict
-from app.config import POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL, HIGH_LIMIT
 from fastapi import HTTPException
+from typing_extensions import TypedDict
+
+from app.config import HIGH_LIMIT, POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL
 
 
 class PokemonListEntry(TypedDict):

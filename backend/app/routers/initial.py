@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 import app.logic as logic
 
 router: APIRouter = APIRouter(prefix='/initial', responses={404: {'description': 'Not found'}})

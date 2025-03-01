@@ -1,6 +1,12 @@
 from __future__ import annotations
+
+from pprint import pprint
 from typing import Dict, Union
-from glom import glom, Coalesce
+
+from fastapi import HTTPException
+from glom import Coalesce, glom
+from typing_extensions import TypedDict
+
 from app.pokeapi_requests import (
     EvolutionChain,
     PokemonListEntry,
@@ -12,12 +18,9 @@ from app.pokeapi_requests import (
     get_all_types,
     get_evolution_chain,
     get_pokemon,
-    get_type,
     get_pokemon_species,
+    get_type,
 )
-from fastapi import HTTPException
-from typing_extensions import TypedDict
-from pprint import pprint
 
 
 class PokemonPrimitive(TypedDict):
@@ -170,9 +173,7 @@ def _extract_img_from_raw_pokemon_sprites(
     return glom(
         raw_pokemon_sprites,
         {
-            'default': Coalesce(
-                'other.official-artwork.front_default', 'front_default', default=None, skip=None
-            ),
+            'default': Coalesce('other.official-artwork.front_default', 'front_default', default=None, skip=None),
             'shiny': Coalesce('other.official-artwork.front_shiny', 'front_shiny', default=None, skip=None),
         },
     )
@@ -197,22 +198,3 @@ def _resolve_tree_recursive(chain: EvolutionChain) -> EvolutionTree:
     else:
         evolutions: list[EvolutionTree] = [_resolve_tree_recursive(entry) for entry in chain.get('evolves_to')]
         return {'pokemonPrimitive': primitive, 'evolvesTo': evolutions}
-
-
-# return glom(
-#     raw_pokemon,
-#     {
-#         'name': 'name',
-#         'weight': 'weight',
-#         'height': 'height',
-#         'types': ('types', ['type.name'], set),
-#         'img': {
-#             'default': Coalesce(
-#                 'sprites.other.official-artwork.front_default', 'sprites.front_default', default=None, skip=None
-#             ),
-#             'shiny': Coalesce(
-#                 'sprites.other.official-artwork.front_shiny', 'sprites.front_shiny', default=None, skip=None
-#             ),
-#         },
-#     },
-# )

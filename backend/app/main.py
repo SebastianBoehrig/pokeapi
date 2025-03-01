@@ -1,8 +1,9 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.pokeapi_requests import api_online
 from app.routers.initial import router as initial_router
 from app.routers.pokemon import router as pokemon_router
-from app.pokeapi_requests import api_online
-from fastapi.middleware.cors import CORSMiddleware
 
 app: FastAPI = FastAPI()
 

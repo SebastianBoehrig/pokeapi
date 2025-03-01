@@ -1,6 +1,8 @@
 from unittest.mock import patch
-from fastapi import HTTPException
+
 import pytest
+from fastapi import HTTPException
+
 from app import logic
 
 

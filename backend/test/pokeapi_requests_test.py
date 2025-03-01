@@ -1,7 +1,9 @@
-from fastapi import HTTPException
-from app import pokeapi_requests, config
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import pytest
+from fastapi import HTTPException
+
+from app import config, pokeapi_requests
 
 
 @pytest.fixture
