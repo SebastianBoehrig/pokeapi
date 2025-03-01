@@ -23,3 +23,11 @@ def test_api_online_false(mock_requests):
 
     assert not pokeapi_requests.api_online()
     mock_requests.get.assert_called_with(config.POKEAPI_BASE_URL)
+
+
+def test_get_evolution_chain(mock_requests):
+    mock_response = MagicMock(status_code=200)
+    mock_response.json = lambda: {'chain': {'test': 'chain'}}
+    mock_requests.get.return_value = mock_response
+
+    assert pokeapi_requests.get_evolution_chain('pokemon') == {'test': 'chain'}

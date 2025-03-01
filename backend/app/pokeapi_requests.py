@@ -16,19 +16,6 @@ class RawPokemonType(TypedDict):
     type: PokemonListEntry
 
 
-class SpriteLinks(TypedDict):
-    default: str
-    shiny: str
-
-
-class Pokemon(TypedDict):
-    name: str
-    weight: int
-    height: int
-    types: set[str]
-    img: SpriteLinks
-
-
 class EvolutionChain(TypedDict):
     evolves_to: list['EvolutionChain']
     species: PokemonListEntry
