@@ -95,7 +95,7 @@ def get_evolution_chain(url: str) -> EvolutionChain:
 def get_all_types() -> PokemonList:
     response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{HIGH_LIMIT}')
     if response.status_code != 200:
-        raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_types)')
+        raise HTTPException(status_code=404, detail='pokemon types list not found, (get_all_types)')
     return response.json()
 
 
