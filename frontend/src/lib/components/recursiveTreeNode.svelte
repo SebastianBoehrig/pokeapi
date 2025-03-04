@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { EvolutionTree } from './types';
+	import type { EvolutionTree } from '$lib/types';
 
 	let { evolutionTree } = $props<{
 		evolutionTree: EvolutionTree;
