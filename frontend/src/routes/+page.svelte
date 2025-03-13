@@ -8,7 +8,6 @@
 	import PokemonDetailModal from '$lib/components/pokemonDetailModal.svelte';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
 	import { PokeSelect } from '../lib/state/pokeSelect.svelte';
-	
 
 	// Types:
 	let allTypes: TypesType[] | null = $state(null);
@@ -42,7 +41,7 @@
 		<button onclick={() => (PokeSelect.showModal = true)} class="bg-red-600">show</button>
 	</div>
 	<div class="w-0.5 bg-neutral-300 dark:bg-white/10"></div>
-	<div>
+	<div class="w-3xs">
 		<!-- Sidebar -->
 		<ModeIndicator />
 		<TypeCardList {allTypes} />

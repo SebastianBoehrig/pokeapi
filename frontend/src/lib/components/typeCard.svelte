@@ -11,5 +11,5 @@
 </script>
 
 <button onclick={() => searchType()} class="p-2">
-	<img src={type.img} alt={`search for ${type.name}-pokemon`} />
+	<img src={type.img} alt={`search for ${type.name}-pokemon`} class="w-100 max-h-12" />
 </button>
