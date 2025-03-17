@@ -8,6 +8,7 @@
 	import PokemonDetailModal from '$lib/components/pokemonDetailModal.svelte';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
 	import { PokeSelect } from '../lib/state/pokeSelect.svelte';
+	import SearchBar from '$lib/components/searchBar.svelte';
 
 	// Types:
 	let allTypes: TypesType[] | null = $state(null);
@@ -24,10 +25,9 @@
 </script>
 
 <div class="flex-column flex">
-	<div class="grow">
+	<div class="pt-50 px-90 grow">
 		<!-- Main search and select -->
-		<input type="search" bind:value={PokeSearch.searchString} />
-		<button onclick={() => PokeSearch.searchPokemon()}>search</button>
+		<SearchBar />
 		<div>
 			{#if PokeSearch.loading === true}
 				<p>Searching...</p>
@@ -40,7 +40,7 @@
 
 		<button onclick={() => (PokeSelect.showModal = true)} class="bg-red-600">show</button>
 	</div>
-	<div class="w-0.5 bg-neutral-300 dark:bg-white/10"></div>
+	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
 	<div class="w-3xs">
 		<!-- Sidebar -->
 		<ModeIndicator />
