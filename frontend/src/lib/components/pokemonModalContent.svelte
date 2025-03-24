@@ -1,11 +1,62 @@
 <script lang="ts">
 	import type { TypesType } from '$lib/types';
 	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
-	import TypeCard from '$lib/components/typeCard.svelte';
+	import TypeCardSmall from '$lib/components/typeCardSmall.svelte';
 	import RecursiveTreeNode from '$lib/components/recursiveTreeNode.svelte';
+	import { onMount } from 'svelte';
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
 
-	function get_types() {
+	allTypes = [
+		{
+			name: 'normal',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/1.png'
+		},
+		{
+			name: 'fighting',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/2.png'
+		},
+		{
+			name: 'flying',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/3.png'
+		},
+		{
+			name: 'poison',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/4.png'
+		},
+		{
+			name: 'ground',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/5.png'
+		},
+		{
+			name: 'rock',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/6.png'
+		},
+		{
+			name: 'bug',
+			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/7.png'
+		}
+	];
+
+	let scrollContainer: HTMLDivElement | null = null;
+	let scrollbarHeight: number = $state(0);
+	let scrollbarTop: number = $state(0);
+
+	function updateScrollbar(): void {
+		if (!scrollContainer) return;
+
+		const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
+
+		let clientHeightWithSpace = clientHeight - 8;
+
+		scrollbarTop = scrollTop + 4 + ((scrollTop + 4) / scrollHeight) * clientHeightWithSpace;
+		scrollbarHeight = (clientHeightWithSpace * clientHeightWithSpace) / scrollHeight;
+	}
+
+	onMount(() => {
+		updateScrollbar();
+	});
+	// TODO: convert hight and weight to proppper units in backend
+	function get_types(): TypesType[] {
 		if (allTypes == null || PokeSelect.data == null) return [];
 		let result: TypesType[] = [];
 		for (let type of PokeSelect.data.types) {
@@ -20,47 +71,79 @@
 	}
 </script>
 
-<div>
+<div
+	role="dialog"
+	aria-modal="true"
+	class="max-h-4/5 scrollbar-hidden relative z-10 flex w-2/5 flex-col overflow-auto overscroll-none rounded-lg bg-lime-300 p-6 shadow-xl"
+	bind:this={scrollContainer}
+	onscroll={updateScrollbar}
+>
 	{#if PokeSelect.loading}
 		<p>Searching...</p>
 	{:else if PokeSelect.data}
-		<img src={PokeSelect.data.img.default} alt={`picture of ${PokeSelect.data.name}`} />
-		{PokeSelect.data.name}
+		<!-- custom scrollbar -->
+		<div
+			class="absolute right-1 top-0 w-1 rounded-full bg-neutral-400"
+			style="height: {scrollbarHeight}px; transform: translateY({scrollbarTop}px);"
+		></div>
+		<!-- main container -->
+		<div class="relative flex w-1/2 flex-col items-center self-center">
+			<img src={PokeSelect.data.img.default} alt={`picture of ${PokeSelect.data.name}`} />
+			<div class="m-4 text-3xl capitalize">{PokeSelect.data.name}</div>
+		</div>
 		<hr />
 		<p>
-			height = {PokeSelect.data.height}
+			Height: {PokeSelect.data.height}
 			<br />
-			weight = {PokeSelect.data.weight}
+			Weight: {PokeSelect.data.weight}
 		</p>
 		<hr />
-		{#each get_types() as type}
-			<!-- <TypeCard TODO: make smaller typpecard
-				onclick={() => {
-					changeShowModal(false);
-					serchType(type.name);
-				}}
-				{type}
-			/> -->
-		{/each}
+		<!-- types display -->
+		<div class="flex flex-wrap pt-2">
+			{#each get_types() as type}
+				<TypeCardSmall {type} />
+			{/each}
+		</div>
 		<hr />
-		<p>Forms</p>
+		<!-- varietie forms -->
+		<div class="flex flex-wrap pt-2">
+			{#if PokeSelect.data.varietieTypes}
+				{#each PokeSelect.data.varietieTypes as varietieType}
+					<button
+						onclick={() => PokeSelect.searchSelectPokemon(varietieType.name)}
+						class="pb-2 pr-2"
+					>
+						<img src={varietieType.img} alt={`picture of ${varietieType.name}`} class="h-12 w-12" />
+					</button>
+				{/each}
+			{:else}
+				<p>No alternate Forms with stat changes</p>
+			{/if}
+		</div>
 		<hr />
-		{#if PokeSelect.data}
+		<!-- cosmetic forms -->
+		<!-- evolutions display -->
+		<div class="p-2 pb-0">
 			{#if PokeSelect.data.evolutionTree}
-				<p>
-					{JSON.stringify(PokeSelect.data.evolutionTree)}
-				</p>
-				<!-- <RecursiveTreeNode evolutionTree={pokemon.evolutionTree} /> -->
+				<RecursiveTreeNode evolutionTree={PokeSelect.data.evolutionTree} />
 			{:else}
 				<p>No Evolutions</p>
 			{/if}
-		{/if}
+		</div>
 	{/if}
 </div>
 
 <style>
-	div {
-		background-color: rgb(175, 214, 130);
-		width: 50rem;
+	hr {
+		width: 100%;
+	}
+
+	.scrollbar-hidden::-webkit-scrollbar {
+		display: none;
+	}
+
+	.scrollbar-hidden {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
 	}
 </style>

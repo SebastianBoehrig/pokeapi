@@ -12,8 +12,6 @@
 			aria-label="Close modal"
 		></button>
 		<!-- Modal content container -->
-		<div role="dialog" aria-modal="true" class="relative z-10 rounded-lg bg-white p-6 shadow-xl">
-			{@render children?.()}
-		</div>
+		{@render children?.()}
 	</div>
 {/if}

@@ -5,10 +5,8 @@
 	let { pokemonPrimitive } = $props<{ pokemonPrimitive: PokemonPrimitive }>();
 
 	function selectSearchPokemon(): void {
-		console.log('clicked');
 		PokeSelect.searchSelectPokemon(pokemonPrimitive.name);
 		PokeSelect.showModal = true;
-		console.log(PokeSelect.showModal);
 	}
 </script>
 
