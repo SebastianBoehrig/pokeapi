@@ -31,6 +31,7 @@ class Varieties(TypedDict):
 
 class PokemonSpecies(TypedDict, total=False):
     evolution_chain: Dict[str, str]  # only url
+    name: str
     varieties: list[Varieties]
 
 

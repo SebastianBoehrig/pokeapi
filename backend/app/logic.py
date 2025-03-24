@@ -70,7 +70,7 @@ def get_pokemon_primitive(species_name: str) -> PokemonPrimitive:
     default_pokemon: RawPokemon = get_pokemon(default_varietie_name)
 
     pokemonImg: PokemonImg = _extract_img_from_raw_pokemon_sprites(default_pokemon.get('sprites', {}))
-    return {'name': species_name, 'img': pokemonImg.get('default')}
+    return {'name': species.get('name'), 'img': pokemonImg.get('default')}
 
 
 def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
@@ -90,7 +90,7 @@ def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
         if not varietie.get('pokemon'):
             continue
         varietie_name: str | None = varietie.get('pokemon', {}).get('name')
-        if varietie_name and varietie_name != pokemon_name:
+        if varietie_name and varietie_name != pokemon.get('name'):
             raw_pokemon: RawPokemon = get_pokemon(varietie_name)
 
             pokemonImg: PokemonImg = _extract_img_from_raw_pokemon_sprites(raw_pokemon.get('sprites', {}))
