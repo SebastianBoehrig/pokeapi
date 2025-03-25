@@ -42,4 +42,4 @@ class PokemonSearch {
 	}
 }
 
-export const PokeSearch = new PokemonSearch(); //TODO: make default export + getter singkleton pattern
+export const PokeSearch = new PokemonSearch();

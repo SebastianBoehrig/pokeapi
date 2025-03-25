@@ -8,37 +8,6 @@
 
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
 
-	allTypes = [
-		{
-			name: 'normal',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/1.png'
-		},
-		{
-			name: 'fighting',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/2.png'
-		},
-		{
-			name: 'flying',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/3.png'
-		},
-		{
-			name: 'poison',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/4.png'
-		},
-		{
-			name: 'ground',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/5.png'
-		},
-		{
-			name: 'rock',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/6.png'
-		},
-		{
-			name: 'bug',
-			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/7.png'
-		}
-	]; //remove
-
 	let scrollContainer: HTMLDivElement | null = null;
 	let scrollbarHeight: number = $state(0);
 	let scrollbarTop: number = $state(0);

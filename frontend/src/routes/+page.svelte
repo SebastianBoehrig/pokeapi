@@ -6,7 +6,6 @@
 	import SearchBar from '$lib/components/searchBar.svelte';
 	import TypeCardList from '$lib/components/typeCardList.svelte';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
-	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
 	import type { TypesType } from '$lib/types';
 	import { onMount } from 'svelte';
 
@@ -27,23 +26,15 @@
 	<div class="pt-50 px-90 grow">
 		<!-- Main search and select -->
 		<SearchBar />
-		<div>
+		<div class="grid grid-cols-4">
 			{#if PokeSearch.loading === true}
-				<p>Searching...</p>
+				<p class="text-sm">Searching...</p>
 			{:else if PokeSearch.data}
 				{#each PokeSearch.data as pokemonPrimitive}
 					<PokemonPrimitiveCard {pokemonPrimitive} />
 				{/each}
 			{/if}
 		</div>
-
-		<button
-			onclick={() => {
-				//PokeSelect.preeevee();
-				PokeSelect.showModal = true;
-			}}
-			class="bg-red-600">show</button
-		>
 	</div>
 	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
 	<div class="w-3xs">

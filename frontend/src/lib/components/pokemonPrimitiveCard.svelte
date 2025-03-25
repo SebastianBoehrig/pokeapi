@@ -10,7 +10,7 @@
 	}
 </script>
 
-<button onclick={() => selectSearchPokemon()}>
-	<img src={pokemonPrimitive.img} alt={`picture of ${pokemonPrimitive.name}`} class="w-48 h-48"/>
-	<p class="w-fit">{pokemonPrimitive.name}</p>
+<button onclick={() => selectSearchPokemon()} class="flex flex-col items-center">
+	<img src={pokemonPrimitive.img} alt={`picture of ${pokemonPrimitive.name}`} class="max-h-48" />
+	<p class="m-2 w-fit text-sm">{pokemonPrimitive.name}</p>
 </button>

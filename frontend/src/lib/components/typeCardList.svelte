@@ -10,6 +10,6 @@
 			<TypeCard {type} />
 		{/each}
 	{:else}
-		<p>Loading...</p>
+		<p class="text-sm">Loading...</p>
 	{/if}
 </div>
