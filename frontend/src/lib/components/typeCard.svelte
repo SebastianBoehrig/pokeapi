@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { TypesType } from '$lib/types';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
+	import type { TypesType } from '$lib/types';
 
 	let { type } = $props<{ type: TypesType }>();
 

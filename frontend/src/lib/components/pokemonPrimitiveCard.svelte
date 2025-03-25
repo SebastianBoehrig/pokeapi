@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { PokemonPrimitive } from '$lib/types';
 	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
+	import type { PokemonPrimitive } from '$lib/types';
 
 	let { pokemonPrimitive } = $props<{ pokemonPrimitive: PokemonPrimitive }>();
 
@@ -11,17 +11,6 @@
 </script>
 
 <button onclick={() => selectSearchPokemon()}>
-	<img src={pokemonPrimitive.img} alt={`picture of ${pokemonPrimitive.name}`} />
-	<p>{pokemonPrimitive.name}</p>
+	<img src={pokemonPrimitive.img} alt={`picture of ${pokemonPrimitive.name}`} class="w-48 h-48"/>
+	<p class="w-fit">{pokemonPrimitive.name}</p>
 </button>
-
-<style>
-	p {
-		width: fit-content;
-	}
-
-	img {
-		width: 12rem;
-		height: 12rem;
-	}
-</style>

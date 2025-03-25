@@ -1,14 +1,14 @@
 <script lang="ts">
-	import PokemonPrimitiveCard from '$lib/components/pokemonPrimitiveCard.svelte';
-	import { onMount } from 'svelte';
-	import type { TypesType } from '$lib/types';
+	import PokemonDetailModal from '$lib/components/modal/pokemonDetailModal.svelte';
+	import PokemonModalContent from '$lib/components/modal/pokemonModalContent.svelte';
 	import ModeIndicator from '$lib/components/modeIndicator.svelte';
-	import PokemonModalContent from '$lib/components/pokemonModalContent.svelte';
+	import PokemonPrimitiveCard from '$lib/components/pokemonPrimitiveCard.svelte';
+	import SearchBar from '$lib/components/searchBar.svelte';
 	import TypeCardList from '$lib/components/typeCardList.svelte';
-	import PokemonDetailModal from '$lib/components/pokemonDetailModal.svelte';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
 	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
-	import SearchBar from '$lib/components/searchBar.svelte';
+	import type { TypesType } from '$lib/types';
+	import { onMount } from 'svelte';
 
 	let allTypes: TypesType[] | null = $state(null);
 	onMount(() => {

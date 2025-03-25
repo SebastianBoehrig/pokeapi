@@ -1,9 +1,11 @@
 <script lang="ts">
-	import type { TypesType } from '$lib/types';
+	import RecursiveTreeNode from '$lib/components/modal/recursiveTreeNode.svelte';
+	import TypeCardSmall from '$lib/components/modal/typeCardSmall.svelte';
 	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
-	import TypeCardSmall from '$lib/components/typeCardSmall.svelte';
-	import RecursiveTreeNode from '$lib/components/recursiveTreeNode.svelte';
+	import type { PokemonPrimitive, TypesType } from '$lib/types';
 	import { onMount } from 'svelte';
+	import AlternativeTypes from './alternativeTypes.svelte';
+
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
 
 	allTypes = [
@@ -35,7 +37,7 @@
 			name: 'bug',
 			img: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/7.png'
 		}
-	];
+	]; //remove
 
 	let scrollContainer: HTMLDivElement | null = null;
 	let scrollbarHeight: number = $state(0);
@@ -59,13 +61,9 @@
 	function get_types(): TypesType[] {
 		if (allTypes == null || PokeSelect.data == null) return [];
 		let result: TypesType[] = [];
+
 		for (let type of PokeSelect.data.types) {
-			for (let at of allTypes) {
-				if (at.name == type) {
-					result.push(at);
-					break;
-				}
-			}
+			result.push(allTypes.find((element: PokemonPrimitive) => element.name === type));
 		}
 		return result;
 	}
@@ -106,20 +104,7 @@
 		</div>
 		<hr />
 		<!-- varietie forms -->
-		<div class="flex flex-wrap pt-2">
-			{#if PokeSelect.data.varietieTypes}
-				{#each PokeSelect.data.varietieTypes as varietieType}
-					<button
-						onclick={() => PokeSelect.searchSelectPokemon(varietieType.name)}
-						class="pb-2 pr-2"
-					>
-						<img src={varietieType.img} alt={`picture of ${varietieType.name}`} class="h-12 w-12" />
-					</button>
-				{/each}
-			{:else}
-				<p>No alternate Forms with stat changes</p>
-			{/if}
-		</div>
+		<AlternativeTypes pokePrimitives={PokeSelect.data.varietieTypes} />
 		<hr />
 		<!-- cosmetic forms -->
 		<!-- evolutions display -->

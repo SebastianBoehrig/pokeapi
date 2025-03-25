@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { TypesType } from '$lib/types';
 	import TypeCard from '$lib/components/typeCard.svelte';
+	import type { TypesType } from '$lib/types';
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
 </script>
 
