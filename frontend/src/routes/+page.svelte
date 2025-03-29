@@ -10,16 +10,22 @@
 	import { onMount } from 'svelte';
 
 	let allTypes: TypesType[] | null = $state(null);
-	onMount(() => {
-		fetch('http://localhost:8181/initial/types')
-			.then((response) => response.json())
-			.then((obj: TypesType[]) => {
-				allTypes = obj;
-			})
-			.catch((error) => {
-				console.log(`Error during http://localhost:8181/initial/types:\n${error}`); //TODO: improve logging for potential user
-			});
-	});
+
+	onMount(async () => await getTypes());
+
+	async function getTypes(): Promise<void> {
+		try {
+			const response = await fetch('http://localhost:8181/initial/types');
+
+			if (!response.ok) {
+				throw new Error(`Could not get Types! Status: ${response.status}`);
+			}
+
+			allTypes = await response.json();
+		} catch (error: unknown) {
+			console.error(`Error during http://localhost:8181/initial/types:\n${error}`);
+		}
+	}
 </script>
 
 <div class="flex-column flex">
@@ -35,6 +41,8 @@
 				{/each}
 			{/if}
 		</div>
+
+		<button onclick={() => console.log(PokeSearch.error)} class="bg-orange-300">a</button>
 	</div>
 	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
 	<div class="w-3xs">
