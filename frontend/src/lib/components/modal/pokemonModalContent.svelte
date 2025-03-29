@@ -8,6 +8,8 @@
 
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
 
+	let imgHover: boolean = $state(false);
+
 	let scrollContainer: HTMLDivElement | null = null;
 	let scrollbarHeight: number = $state(0);
 	let scrollbarTop: number = $state(0);
@@ -55,7 +57,12 @@
 		></div>
 		<!-- main container -->
 		<div class="relative flex w-1/2 flex-col items-center self-center">
-			<img src={PokeSelect.data.img.default} alt={`picture of ${PokeSelect.data.name}`} />
+			<img
+				src={imgHover ? PokeSelect.data.img.shiny : PokeSelect.data.img.default}
+				onmouseenter={() => (imgHover = true)}
+				onmouseleave={() => (imgHover = false)}
+				alt={`picture of ${PokeSelect.data.name}`}
+			/>
 			<div class="m-4 text-3xl capitalize">{PokeSelect.data.name}</div>
 		</div>
 		<hr />
