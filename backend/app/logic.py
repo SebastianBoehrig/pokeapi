@@ -40,7 +40,7 @@ class EvolutionTree(TypedDict):
 
 class PokemonDetail(TypedDict):
     name: str
-    weight: int | None
+    weight: float | None
     height: int | None
     types: list[str | None]
     img: PokemonImg
@@ -78,6 +78,7 @@ def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
 
     types: list[str | None] = _extract_types_from_raw_pokemon_types(pokemon.get('types', []))
     img: PokemonImg = _extract_img_from_raw_pokemon_sprites(pokemon.get('sprites', {}))
+    weight, height = _extract_data_points_from_raw_pokemon(pokemon)
 
     species_name: str | None = pokemon.get('species', {}).get('name')
     if not species_name:
@@ -106,8 +107,8 @@ def get_pokemon_detail(pokemon_name: str) -> PokemonDetail:
 
     return {
         'name': pokemon.get('name', pokemon_name),
-        'weight': pokemon.get('weight', None),
-        'height': pokemon.get('height', None),
+        'weight': weight,
+        'height': height,
         'types': types,
         'img': img,
         'varietieTypes': varietie_list,
@@ -177,6 +178,16 @@ def _extract_img_from_raw_pokemon_sprites(
             'shiny': Coalesce('other.official-artwork.front_shiny', 'front_shiny', default=None, skip=None),
         },
     )
+
+
+def _extract_data_points_from_raw_pokemon(pokemon: RawPokemon) -> tuple[float | None, int | None]:
+    weight = pokemon.get('weight', None)
+    height = pokemon.get('height', None)
+    if weight:
+        weight /= 10  # pokeapi only has dm and rounds up
+    if height:
+        height *= 10  # pokeapi only has dm and rounds up
+    return weight, height
 
 
 def _extract_evolution_tree(chain_root: EvolutionChain) -> EvolutionTree | None:

@@ -67,9 +67,9 @@
 		</div>
 		<hr />
 		<p>
-			Height: {PokeSelect.data.height}
+			Height: {PokeSelect.data.height} cm
 			<br />
-			Weight: {PokeSelect.data.weight}
+			Weight: {PokeSelect.data.weight} kg
 		</p>
 		<hr />
 		<!-- types display -->
