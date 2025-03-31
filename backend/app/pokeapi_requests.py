@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict, Union
 
 import requests
+import httpx
 from fastapi import HTTPException
 from typing_extensions import TypedDict
 
@@ -79,9 +80,9 @@ def get_pokemon(name: str) -> RawPokemon:
     return response.json()
 
 
-def get_type(type: str) -> RawType:
-    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
-    if response.status_code != 200:
+async def get_type(type: str, client: httpx.AsyncClient) -> RawType:
+    response: httpx.Response = await client.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
+    if response.status_code != httpx.codes.OK:
         raise HTTPException(status_code=404, detail=f'{type} not found, (get_type)')
     return response.json()
 

@@ -15,7 +15,6 @@ from app.pokeapi_requests import (
     RawPokemonType,
     RawType,
     Varieties,
-    get_all_types,
     get_evolution_chain,
     get_pokemon,
     get_pokemon_species,
@@ -47,11 +46,6 @@ class PokemonDetail(TypedDict):
     varietieTypes: list[PokemonPrimitive]
     cosmeticTypes: list[PokemonPrimitive] | None
     evolutionTree: EvolutionTree | None
-
-
-class TypesType(TypedDict):
-    name: str
-    img: str
 
 
 def get_pokemon_primitive(species_name: str) -> PokemonPrimitive:
@@ -132,27 +126,6 @@ def get_pokemon_primitive_of_type(type_name: str) -> list[PokemonPrimitive]:
 
         pokemonImg: PokemonImg = _extract_img_from_raw_pokemon_sprites(pokemon.get('sprites', {}))
         result.append({'name': name, 'img': pokemonImg.get('default')})
-    return result
-
-
-def get_types() -> list[TypesType]:
-    type_list: list[str] = [species['name'] for species in get_all_types().get('results', {})]
-    result: list[TypesType] = []
-    for type in type_list:
-        img: str | None = glom(
-            get_type(type),
-            (
-                'sprites',
-                Coalesce(
-                    'generation-ix.scarlet-violet.name_icon',
-                    'generation-iv.platinum.name_icon',
-                    default=None,
-                    skip=None,
-                ),
-            ),
-        )
-        if img:
-            result.append({'name': type, 'img': img})
     return result
 
 

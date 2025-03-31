@@ -1,11 +1,20 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import httpx
 
 from app.pokeapi_requests import api_online
 from app.routers.initial import router as initial_router
 from app.routers.pokemon import router as pokemon_router
 
-app: FastAPI = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    async with httpx.AsyncClient() as client:
+        app.state.client = client
+        yield
+
+app: FastAPI = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
