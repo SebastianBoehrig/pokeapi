@@ -80,13 +80,6 @@ def get_pokemon(name: str) -> RawPokemon:
     return response.json()
 
 
-async def get_type(type: str, client: httpx.AsyncClient) -> RawType:
-    response: httpx.Response = await client.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
-    if response.status_code != httpx.codes.OK:
-        raise HTTPException(status_code=404, detail=f'{type} not found, (get_type)')
-    return response.json()
-
-
 def get_evolution_chain(url: str) -> EvolutionChain:
     response: requests.Response = requests.get(url)
     if response.status_code != 200:
@@ -97,9 +90,16 @@ def get_evolution_chain(url: str) -> EvolutionChain:
     return chain
 
 
-def get_all_types() -> PokemonList:
-    response: requests.Response = requests.get(f'{POKEAPI_TYPE_URL}/{HIGH_LIMIT}')
-    if response.status_code != 200:
+async def get_type(type: str, client: httpx.AsyncClient) -> RawType:
+    response: httpx.Response = await client.get(f'{POKEAPI_TYPE_URL}/{type}/{HIGH_LIMIT}')
+    if response.status_code != httpx.codes.OK:
+        raise HTTPException(status_code=404, detail=f'{type} not found, (get_type)')
+    return response.json()
+
+
+async def get_all_types(client: httpx.AsyncClient) -> PokemonList:
+    response: httpx.Response = await client.get(f'{POKEAPI_TYPE_URL}/{HIGH_LIMIT}')
+    if response.status_code != httpx.codes.OK:
         raise HTTPException(status_code=404, detail='pokemon types list not found, (get_all_types)')
     return response.json()
 
