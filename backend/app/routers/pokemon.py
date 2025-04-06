@@ -1,26 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
-from app.logic import (
-    PokemonDetail,
-    PokemonPrimitive,
-    get_pokemon_detail,
-    get_pokemon_primitive,
-    get_pokemon_primitive_of_type,
-)
+from app.logic.get_pokemon_detail import get_pokemon_detail
+from app.logic.get_pokemon_primitive import get_pokemon_primitive
+from app.logic.get_pokemon_primitive_of_type import get_pokemon_primitive_of_type
+from app.types import PokemonDetail, PokemonPrimitive
 
 router: APIRouter = APIRouter(prefix='/pokemon', responses={404: {'description': 'Not found'}})
 
 
 @router.get('/primitives/{name}', response_model=PokemonPrimitive)
-def get_pokemon_primitive_route(name: str) -> PokemonPrimitive:
-    return get_pokemon_primitive(name)
+async def get_pokemon_primitive_route(name: str, request: Request) -> PokemonPrimitive:
+    return await get_pokemon_primitive(name, request.app.state.client)
 
 
 @router.get('/detail/{name}', response_model=PokemonDetail)
-def get_pokemon_detail_route(name: str) -> PokemonDetail:
-    return get_pokemon_detail(name)
+async def get_pokemon_detail_route(name: str, request: Request) -> PokemonDetail:
+    return await get_pokemon_detail(name, request.app.state.client)
 
 
 @router.get('/type/{type}', response_model=list[PokemonPrimitive])
-def get_pokemon_primitive_of_type_route(type: str) -> list[PokemonPrimitive]:
-    return get_pokemon_primitive_of_type(type)  # TODO: async calls !!!!!!!!!!!!!!
+async def get_pokemon_primitive_of_type_route(type: str, request: Request) -> list[PokemonPrimitive]:
+    return await get_pokemon_primitive_of_type(type, request.app.state.client)
