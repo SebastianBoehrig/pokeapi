@@ -6,7 +6,7 @@ from app.config import HIGH_LIMIT, POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAP
 from app.types import EvolutionChain, PokemonList, PokemonSpecies, RawPokemon, RawType
 
 
-def api_online() -> bool:
+def api_online() -> bool: #TODO> switch to httpx too
     response: requests.Response = requests.get(POKEAPI_BASE_URL)
     if response.status_code != 200:
         return False
