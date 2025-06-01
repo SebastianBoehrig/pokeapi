@@ -69,6 +69,3 @@ async def test_get_pokemon_primitive_no_name(
         'name': 'testpoke',
         'img': 'poke_img',
     }
-
-
-# TODO: special cases
