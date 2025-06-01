@@ -1,5 +1,7 @@
-from app.logic.helpers import extract_img_from_raw_pokemon_sprites
 import pytest
+
+from app.logic.helpers import extract_img_from_raw_pokemon_sprites
+
 
 @pytest.mark.parametrize(
     'input,res',
