@@ -1,16 +1,9 @@
 from unittest.mock import MagicMock, patch
 
-import httpx
 import pytest
 from fastapi import HTTPException
 
 from app import config, pokeapi_requests
-
-
-@pytest.fixture
-async def async_client():
-    async with httpx.AsyncClient() as client:
-        yield client
 
 
 @pytest.fixture

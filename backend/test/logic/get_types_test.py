@@ -1,15 +1,8 @@
 from unittest.mock import AsyncMock, call, patch
 
-import httpx
 import pytest
 
 from app.logic import get_types
-
-
-@pytest.fixture
-async def async_client():
-    async with httpx.AsyncClient() as client:
-        yield client
 
 
 @patch('app.logic.get_types.get_type', new_callable=AsyncMock)

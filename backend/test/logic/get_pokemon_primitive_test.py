@@ -1,16 +1,9 @@
 from unittest.mock import AsyncMock, patch
 
-import httpx
 import pytest
 from fastapi import HTTPException
 
 from app.logic import get_pokemon_primitive
-
-
-@pytest.fixture
-async def async_client():
-    async with httpx.AsyncClient() as client:
-        yield client
 
 
 @patch('app.logic.get_pokemon_primitive.extract_img_from_raw_pokemon_sprites')
