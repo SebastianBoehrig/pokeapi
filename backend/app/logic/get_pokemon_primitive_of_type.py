@@ -26,6 +26,6 @@ async def get_pokemon_primitive_of_type(type_name: str, client: httpx.AsyncClien
 
     for pokemon_task in raw_pokemon_task_list:
         pokemonImg: PokemonImg = extract_img_from_raw_pokemon_sprites(pokemon_task.result().get('sprites', {}))
-        name_cleaned = pokemon_task.result().get('name', '') or ''
+        name_cleaned: str = pokemon_task.result().get('name', '') or ''
         result.append({'name': name_cleaned, 'img': pokemonImg.get('default')})
     return result
