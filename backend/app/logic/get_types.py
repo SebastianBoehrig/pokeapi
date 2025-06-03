@@ -1,7 +1,7 @@
 import asyncio
 
 import httpx
-from glom import Coalesce, glom
+from glom import Coalesce, glom # type: ignore
 
 from app.pokeapi_requests import PokemonList, RawType, get_all_types, get_type
 from app.types import TypesType
@@ -19,7 +19,7 @@ async def get_types(client: httpx.AsyncClient) -> list[TypesType]:
             raw_type_task_list.append(task)
 
     for raw_type in raw_type_task_list:
-        img: str | None = glom(
+        img: str | None = glom( # type: ignore
             raw_type.result(),
             (
                 'sprites',
