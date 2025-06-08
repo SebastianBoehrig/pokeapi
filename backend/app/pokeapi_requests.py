@@ -1,14 +1,13 @@
 import httpx
-import requests
 from fastapi import HTTPException
 
 from app.config import HIGH_LIMIT, POKEAPI_BASE_URL, POKEAPI_POKEMON_URL, POKEAPI_SPECIES_URL, POKEAPI_TYPE_URL
 from app.types import EvolutionChain, PokemonList, PokemonSpecies, RawPokemon, RawType
 
 
-def api_online() -> bool: #TODO> switch to httpx too
-    response: requests.Response = requests.get(POKEAPI_BASE_URL)
-    if response.status_code != 200:
+def api_online(client: httpx.Client) -> bool:
+    response: httpx.Response = client.get(POKEAPI_BASE_URL)
+    if response.status_code != httpx.codes.OK:
         return False
     return True
 
@@ -51,9 +50,9 @@ async def get_all_types(client: httpx.AsyncClient) -> PokemonList:
     return response.json()
 
 
-def get_all_pokemon_species() -> PokemonList:
+def get_all_pokemon_species(client: httpx.AsyncClient) -> PokemonList:
     # TODO: maybe a optimization for a dropdown for searching
-    response: requests.Response = requests.get(f'{POKEAPI_SPECIES_URL}/{HIGH_LIMIT}')
-    if response.status_code != 200:
+    response: httpx.Response = client.get(f'{POKEAPI_SPECIES_URL}/{HIGH_LIMIT}')
+    if response.status_code != httpx.codes.OK:
         raise HTTPException(status_code=404, detail='pokemon species list not found, (get_all_pokemon_species)')
     return response.json()

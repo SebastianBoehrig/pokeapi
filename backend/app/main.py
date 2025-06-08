@@ -10,9 +10,12 @@ from app.routers.pokemon import router as pokemon_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with httpx.AsyncClient() as client:
-        app.state.client = client
-        yield
+    with httpx.Client() as client:
+        async with httpx.AsyncClient() as async_client:
+            app.state.client = client
+            app.state.async_client = async_client
+            yield
+
 
 app: FastAPI = FastAPI(lifespan=lifespan)
 
@@ -26,7 +29,7 @@ app.add_middleware(
 
 @app.get('/')
 async def root() -> dict[str, str]:
-    pokeapi_state: str = 'Running' if api_online() else 'Offline'
+    pokeapi_state: str = 'Running' if api_online(app.state.client) else 'Offline'
     return {'description': f'Backend up and running, pokeapi is {pokeapi_state}'}
 
 

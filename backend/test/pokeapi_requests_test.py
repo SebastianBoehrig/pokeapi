@@ -1,31 +1,30 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+import httpx
 from fastapi import HTTPException
 
 from app import config, pokeapi_requests
 
 
 @pytest.fixture
-def mock_requests():
-    with patch('app.pokeapi_requests.requests') as mock_requests:
-        yield mock_requests
+def client():
+    with httpx.Client() as client:
+        yield client
 
 
-def test_api_online(mock_requests):
-    mock_response = MagicMock(status_code=200)
-    mock_requests.get.return_value = mock_response
+def test_api_online(httpx_mock, client):
+    httpx_mock.add_response(status_code=200)
 
-    assert pokeapi_requests.api_online() is True
-    mock_requests.get.assert_called_with(config.POKEAPI_BASE_URL)
+    assert pokeapi_requests.api_online(client) is True
+    assert httpx_mock.get_requests()[0].url == config.POKEAPI_BASE_URL
 
 
-def test_api_online_false(mock_requests):
-    mock_response = MagicMock(status_code=404)
-    mock_requests.get.return_value = mock_response
+def test_api_online_false(httpx_mock, client):
+    httpx_mock.add_response(status_code=404)
 
-    assert not pokeapi_requests.api_online()
-    mock_requests.get.assert_called_with(config.POKEAPI_BASE_URL)
+    assert not pokeapi_requests.api_online(client)
+    assert httpx_mock.get_requests()[0].url == config.POKEAPI_BASE_URL
 
 
 async def test_get_evolution_chain(httpx_mock, async_client):
@@ -61,7 +60,7 @@ async def test_404(fkt, param, msg, httpx_mock, async_client):
 
 async def test_get_evolution_chain_404(httpx_mock, async_client):
     httpx_mock.add_response(status_code=404)
-    
+
     with pytest.raises(HTTPException) as excinfo:
         print(await pokeapi_requests.get_evolution_chain('http://test', async_client))
     assert str(excinfo.value) == '404: evolution not found: http://test, (get_evolution_chain)'

@@ -1,6 +1,5 @@
 fastapi[standard]==0.115.8
 glom==24.11.0
-requests==2.32.3
 mock==5.1.0
 pyright==1.1.401
 pytest==8.3.4

@@ -8,4 +8,4 @@ router: APIRouter = APIRouter(prefix='/initial', responses={404: {'description':
 
 @router.get('/types', response_model=list[TypesType])
 async def get_types_router(request: Request) -> list[TypesType]:
-    return await get_types(request.app.state.client)
+    return await get_types(request.app.state.async_client)
