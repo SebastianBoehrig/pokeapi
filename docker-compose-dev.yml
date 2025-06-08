@@ -1,0 +1,35 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend
+    ports:
+      - "8181:8181"
+    networks:
+      - app-network
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile-dev
+    container_name: frontend
+    ports:
+      - "8080:5173"
+    environment:
+      - BACKEND_URL=http://backend:8181
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    volumes:
+      - ./frontend:/app  # Mount entire directory
+      - /app/node_modules  # Exclude node_modules from host
+    command: npm run dev
+
+networks:
+  app-network:
+    driver: bridge
+
+# docker-compose -f docker-compose-dev.yml up -d --build
