@@ -94,7 +94,7 @@ async def _extract_evolution_tree(chain_root: EvolutionChain, client: httpx.Asyn
             tasktree = await _resolve_tree_recursive(chain_root, client, tg)
         return _extract_evolution_tree_from_task_tree_recursive(tasktree)
     except Exception as e:
-        pprint('eror')
+        pprint('error in the recursive evolution tree resolution!')
         pprint(e)
         return None
 
