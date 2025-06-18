@@ -3,7 +3,7 @@
 	import TypeCardSmall from '$lib/components/modal/typeCardSmall.svelte';
 	import { PokeSelect } from '$lib/state/pokeSelect.svelte';
 	import type { PokemonPrimitive, TypesType } from '$lib/types';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import AlternativeTypes from './alternativeTypes.svelte';
 
 	let { allTypes } = $props<{ allTypes: TypesType[] | null }>();
@@ -11,6 +11,7 @@
 	let imgHover: boolean = $state(false);
 
 	let scrollContainer: HTMLDivElement | null = null;
+	let observer: ResizeObserver = new ResizeObserver(updateScrollbar);
 	let scrollbarHeight: number = $state(0);
 	let scrollbarTop: number = $state(0);
 
@@ -18,6 +19,7 @@
 		if (!scrollContainer) return;
 
 		const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
+		console.log(clientHeight)
 
 		let clientHeightWithSpace = clientHeight - 8;
 
@@ -26,7 +28,10 @@
 	}
 
 	onMount(() => {
-		updateScrollbar();
+		if (scrollContainer) observer.observe(scrollContainer);
+	});
+	onDestroy(() => {
+		observer.disconnect();
 	});
 	// TODO: convert hight and weight to proppper units in backend
 	function get_types(): TypesType[] {
