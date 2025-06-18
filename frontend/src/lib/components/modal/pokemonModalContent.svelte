@@ -10,7 +10,7 @@
 
 	let imgHover: boolean = $state(false);
 
-	let scrollContainer: HTMLDivElement | null = null;
+	let scrollContainer: HTMLDialogElement | null = null;
 	let observer: ResizeObserver = new ResizeObserver(updateScrollbar);
 	let scrollbarHeight: number = $state(0);
 	let scrollbarTop: number = $state(0);
@@ -45,8 +45,7 @@
 	}
 </script>
 
-<div
-	role="dialog"
+<dialog
 	aria-modal="true"
 	class="max-h-4/5 scrollbar-hidden relative z-10 flex w-2/5 flex-col overflow-auto overscroll-none rounded-lg bg-lime-300 p-6 shadow-xl"
 	bind:this={scrollContainer}
@@ -97,7 +96,7 @@
 			{/if}
 		</div>
 	{/if}
-</div>
+</dialog>
 
 <style>
 	hr {
