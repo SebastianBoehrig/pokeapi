@@ -19,7 +19,7 @@
 		if (!scrollContainer) return;
 
 		const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
-		console.log(clientHeight)
+		console.log(clientHeight);
 
 		let clientHeightWithSpace = clientHeight - 8;
 
@@ -33,7 +33,7 @@
 	onDestroy(() => {
 		observer.disconnect();
 	});
-	// TODO: convert hight and weight to proppper units in backend
+
 	function get_types(): TypesType[] {
 		if (allTypes == null || PokeSelect.data == null) return [];
 		let result: TypesType[] = [];
