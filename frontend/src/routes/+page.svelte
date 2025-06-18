@@ -41,8 +41,6 @@
 				{/each}
 			{/if}
 		</div>
-
-		<button onclick={() => console.log(PokeSearch.error)} class="bg-orange-300">a</button>
 	</div>
 	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
 	<div class="w-3xs">
