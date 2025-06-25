@@ -7,25 +7,9 @@
 	import TypeCardList from '$lib/components/typeCardList.svelte';
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
 	import type { TypesType } from '$lib/types';
-	import { onMount } from 'svelte';
 
-	let allTypes: TypesType[] | null = $state(null);
-
-	onMount(async () => await getTypes());
-
-	async function getTypes(): Promise<void> {
-		try {
-			const response = await fetch('http://localhost:8181/initial/types');
-
-			if (!response.ok) {
-				throw new Error(`Could not get Types! Status: ${response.status}`);
-			}
-
-			allTypes = await response.json();
-		} catch (error: unknown) {
-			console.error(`Error during http://localhost:8181/initial/types:\n${error}`);
-		}
-	}
+	export let data: { allTypes: TypesType[] };
+	let { allTypes } = data;
 </script>
 
 <div class="flex-column flex">
