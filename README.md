@@ -68,6 +68,12 @@ npm install
 ```
 
 ```powershell
+docker-compose -f docker-compose-dev.yml up
+```
+
+or
+
+```powershell
 npm run dev
 ```
 
@@ -80,4 +86,10 @@ npm install
 
 ```bash
 npm run dev
+```
+
+or
+
+```bash
+docker-compose -f docker-compose-dev.yml up
 ```
