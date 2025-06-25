@@ -1,6 +1,5 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import httpx
 
 from app.pokeapi_requests import api_online
@@ -18,13 +17,6 @@ async def lifespan(app: FastAPI):
 
 
 app: FastAPI = FastAPI(lifespan=lifespan)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['http://localhost:8080'],
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
 
 
 @app.get('/')
