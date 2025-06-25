@@ -8,8 +8,8 @@
 	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
 	import type { TypesType } from '$lib/types';
 
-	export let data: { allTypes: TypesType[] };
-	let { allTypes } = data;
+	let { data } = $props<{ allTypes: TypesType[] }>();
+	let { allTypes } = $state<{ allTypes: TypesType[] }>(data);
 </script>
 
 <div class="flex-column flex">
@@ -25,7 +25,6 @@
 				{/each}
 			{/if}
 		</div>
-		<button onclick={()=>{console.log(PokeSearch.data)}}>aa</button>
 	</div>
 	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
 	<div class="w-3xs">
