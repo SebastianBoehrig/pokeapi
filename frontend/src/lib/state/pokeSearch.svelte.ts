@@ -12,15 +12,11 @@ class PokemonSearch {
 		try {
 			this.loading = true;
 			this.mode = 'Pokemon-Search';
+
 			console.log(`searching for pokemon: ${this.searchString}`);
+			const response: Response = await fetch(`/api/pokemon/primitives/${this.searchString}`);
 
-			const response = await fetch(`http://localhost:8181/pokemon/primitives/${this.searchString}`);
-
-			if (!response.ok) {
-				throw new Error(`Could not find Pokemon! Status: ${response.status}`);
-			}
-
-			this.data = [await response.json()]; //response.json returns a Promise since it starts as soon as the header is there.
+			this.data = [await response.json()];
 		} catch (error: unknown) {
 			console.error(`Error during /pokemon/primitives/${this.searchString}:\n${error}`);
 			this.error = getErrorMessage(error);
@@ -35,11 +31,7 @@ class PokemonSearch {
 			this.mode = 'Type-search';
 			console.log(`searching for type: ${this.searchString}`);
 
-			const response = await fetch(`http://localhost:8181/pokemon/type/${this.searchString}`);
-
-			if (!response.ok) {
-				throw new Error(`Could not find Pokemon! Status: ${response.status}`);
-			}
+			const response = await fetch(`api/pokemon/type/${this.searchString}`);
 
 			this.data = await response.json();
 		} catch (error: unknown) {

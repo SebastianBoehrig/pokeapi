@@ -10,6 +10,6 @@ export const GET: RequestHandler = async ({ params }) => {
 		throw new Error(`Could not get Pokemon Information! Status: ${response.status}`);
 	}
 
-	const allTypes = (await response.json()) as PokemonDetail;
-	return json(allTypes);
+	const data = (await response.json()) as PokemonDetail;
+	return json(data);
 };
