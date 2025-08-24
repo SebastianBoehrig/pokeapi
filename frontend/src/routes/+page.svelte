@@ -1,4 +1,5 @@
 <script lang="ts">
+	import ErrorToast from '$lib/components/errorToast.svelte';
 	import PokemonDetailModal from '$lib/components/modal/pokemonDetailModal.svelte';
 	import PokemonModalContent from '$lib/components/modal/pokemonModalContent.svelte';
 	import ModeIndicator from '$lib/components/modeIndicator.svelte';
@@ -36,3 +37,4 @@
 <PokemonDetailModal>
 	<PokemonModalContent {allTypes} />
 </PokemonDetailModal>
+<ErrorToast />
