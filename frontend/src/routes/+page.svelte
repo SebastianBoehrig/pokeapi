@@ -12,8 +12,8 @@
 	let { allTypes } = $state<{ allTypes: TypesType[] }>(data);
 </script>
 
-<div class="flex-column flex">
-	<div class="pt-50 px-90 grow">
+<div class="flex">
+	<div class="pt-50 px-90 max-w-[calc(87.5%-0.25rem)] grow">
 		<!-- Main search and select -->
 		<SearchBar />
 		<div class="grid grid-cols-4">
@@ -26,8 +26,8 @@
 			{/if}
 		</div>
 	</div>
-	<div class="h-screen w-0.5 bg-neutral-300 dark:bg-white/10"></div>
-	<div class="w-3xs">
+	<div class="h-auto w-0.5 bg-neutral-300 dark:bg-white/10"></div>
+	<div class="w-1/8">
 		<!-- Sidebar -->
 		<ModeIndicator />
 		<TypeCardList {allTypes} />

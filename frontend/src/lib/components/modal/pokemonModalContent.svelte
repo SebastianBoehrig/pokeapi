@@ -19,7 +19,6 @@
 		if (!scrollContainer) return;
 
 		const { scrollHeight, scrollTop, clientHeight } = scrollContainer;
-		console.log(clientHeight);
 
 		let clientHeightWithSpace = clientHeight - 8;
 
