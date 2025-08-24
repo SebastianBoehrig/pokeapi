@@ -1,13 +1,16 @@
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
-import type { PokemonDetail } from '$lib/types';
+import type { PokemonDetail, FastAPIException } from '$lib/types';
+import { sanitizeFastAPIException } from '$lib/error_handeling';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params }): Promise<Response> => {
 	const { name } = params;
 
 	const response: Response = await fetch(`http://backend:8181/pokemon/detail/${name}`);
 	if (!response.ok) {
-		throw new Error(`Could not get Pokemon Information! Status: ${response.status}`);
+		const data = (await response.json()) as FastAPIException;
+		const sanitizedData = sanitizeFastAPIException(data);
+		return json(sanitizedData);
 	}
 
 	const data = (await response.json()) as PokemonDetail;

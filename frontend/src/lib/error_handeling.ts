@@ -1,3 +1,5 @@
+import type { FastAPIException } from "./types";
+
 type ErrorWithMessage = {
 	message: string;
 };
@@ -25,4 +27,12 @@ function toErrorWithMessage(maybeError: unknown): ErrorWithMessage {
 
 export default function getErrorMessage(error: unknown): string {
 	return toErrorWithMessage(error).message;
+}
+
+export function sanitizeFastAPIException(error: FastAPIException): FastAPIException {
+	const message = error.detail;
+	const regex = /, \([^)]*\)/g;
+	return {
+		detail: message.split(regex).filter(a=>a!=="").join(", "),
+	};
 }

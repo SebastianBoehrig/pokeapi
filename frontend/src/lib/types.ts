@@ -26,3 +26,7 @@ export type PokemonDetail = {
 	cosmeticTypes: PokemonPrimitive[] | null; // maybe an additional feature
 	evolutionTree: EvolutionTree;
 };
+
+export type FastAPIException = {
+	detail: string;
+};

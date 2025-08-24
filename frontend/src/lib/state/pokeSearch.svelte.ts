@@ -1,5 +1,5 @@
 import getErrorMessage from '$lib/error_handeling';
-import type { PokemonPrimitive } from '$lib/types';
+import type { PokemonPrimitive, FastAPIException } from '$lib/types';
 
 class PokemonSearch {
 	data: PokemonPrimitive[] | null = $state(null);
@@ -15,8 +15,15 @@ class PokemonSearch {
 
 			console.log(`searching for pokemon: ${this.searchString}`);
 			const response: Response = await fetch(`/api/pokemon/primitives/${this.searchString}`);
+			const responseData: PokemonPrimitive | FastAPIException = await response.json();
 
-			this.data = [await response.json()];
+			if ('detail' in responseData) {
+				this.error = responseData.detail;
+			} else {
+				this.data = [responseData];
+				this.error = null;
+			}
+
 		} catch (error: unknown) {
 			console.error(`Error during /pokemon/primitives/${this.searchString}:\n${error}`);
 			this.error = getErrorMessage(error);
@@ -32,8 +39,15 @@ class PokemonSearch {
 			console.log(`searching for type: ${this.searchString}`);
 
 			const response = await fetch(`api/pokemon/type/${this.searchString}`);
+			const responseData: PokemonPrimitive[] | FastAPIException = await response.json();
 
-			this.data = await response.json();
+			if ('detail' in responseData) {
+				this.error = responseData.detail;
+			} else {
+				this.data = responseData;
+				this.error = null;
+			}
+
 		} catch (error: unknown) {
 			console.error(`Error during /pokemon/type/${this.searchString}:\n${error}`);
 			this.error = getErrorMessage(error);

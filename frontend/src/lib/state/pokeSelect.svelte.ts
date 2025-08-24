@@ -1,5 +1,5 @@
 import getErrorMessage from '$lib/error_handeling';
-import type { PokemonDetail } from '$lib/types';
+import type { PokemonDetail, FastAPIException } from '$lib/types';
 
 class PokemonSelect {
 	data: PokemonDetail | null = $state(null);
@@ -13,8 +13,14 @@ class PokemonSelect {
 
 			console.log(`searchSelecting for: ${pokeName}`);
 			const response: Response = await fetch(`/api/pokemon/detail/${pokeName}`);
+			const responseData: PokemonDetail | FastAPIException = await response.json();
 
-			this.data = await response.json();
+			if ('detail' in responseData) {
+				this.error = responseData.detail;
+			} else {
+				this.data = responseData;
+				this.error = null;
+			}
 		} catch (error: unknown) {
 			console.error(`Error during /pokemon/detail/${pokeName}:\n${error}`);
 			this.error = getErrorMessage(error);
