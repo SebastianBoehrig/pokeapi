@@ -1,142 +1,40 @@
 <script lang="ts">
-	import PokemonPrimitiveCard from './pokemonPrimitiveCard.svelte';
-	import PokemonDetailModal from './pokemonDetailModal.svelte';
-	import TypeCard from './typeCard.svelte';
-	import { onMount } from 'svelte';
-	import type { PokemonDetail, PokemonPrimitive, TypesType } from './types';
-	import ModeIndicator from './modeIndicator.svelte';
-	import PokemonModalContent from './pokemonModalContent.svelte';
+	import ErrorToast from '$lib/components/errorToast.svelte';
+	import PokemonDetailModal from '$lib/components/modal/pokemonDetailModal.svelte';
+	import PokemonModalContent from '$lib/components/modal/pokemonModalContent.svelte';
+	import ModeIndicator from '$lib/components/modeIndicator.svelte';
+	import PokemonPrimitiveCard from '$lib/components/pokemonPrimitiveCard.svelte';
+	import SearchBar from '$lib/components/searchBar.svelte';
+	import TypeCardList from '$lib/components/typeCardList.svelte';
+	import { PokeSearch } from '$lib/state/pokeSearch.svelte';
+	import type { TypesType } from '$lib/types';
 
-	// Toggle Mode:
-	let searchMode: 'Pokemon-Search' | 'Type-search' = $state('Pokemon-Search');
-	let showModal: boolean = $state(false);
-	function changeShowModal(b: boolean) {
-		console.log(`setting showmodal to ${b}`);
-		showModal = b;
-	}
-
-	// Types:
-	let allTypes: TypesType[] | null = $state(null);
-
-	onMount(() => {
-		fetch('http://localhost:8181/initial/types')
-			.then((response) => response.json())
-			.then((obj: TypesType[]) => {
-				allTypes = obj;
-			})
-			.catch((error) => {
-				console.log(`Error during http://localhost:8181/initial/types:`); //TODO: improve logging for potential user
-				console.log(error);
-			});
-	});
-
-	// PokeArray:
-	let pokemonPrimitiveArray: PokemonPrimitive[] | null = $state(null);
-	let pokemon: PokemonDetail | null = $state(null);
-
-	// Search:
-	let searchString: string = $state('');
-	let loadingStateSearch: boolean = $state(false);
-	let loadingStateSelect: boolean = $state(false);
-
-	function searchPokemon() {
-		loadingStateSearch = true;
-		searchMode = 'Pokemon-Search';
-		console.log(`searching for: ${searchString}`);
-		fetch(`http://localhost:8181/pokemon/primitives/${searchString}`) //TODO: replace with Proxy in svelte, url from env/yml
-			.then((response: Response) => response.json())
-			.then((obj: PokemonPrimitive) => {
-				pokemonPrimitiveArray = [obj];
-				loadingStateSearch = false;
-			})
-			.catch((error) => {
-				console.log(`Error during /pokemon/primitives/${searchString}:\n${error}`); //Handle 404s/500s//TODO: show some kind of error popup
-				loadingStateSearch = false;
-			});
-	}
-
-	function searchPokemonByType(typeName: string) {
-		loadingStateSearch = true;
-		searchMode = 'Type-search';
-		searchString = typeName;
-		console.log(`searching for: ${typeName}`);
-		fetch(`http://localhost:8181/pokemon/type/${typeName}`)
-			.then((response: Response) => response.json())
-			.then((obj: PokemonPrimitive[]) => {
-				pokemonPrimitiveArray = obj;
-				loadingStateSearch = false;
-			})
-			.catch((error) => {
-				console.log(`Error during /pokemon/type/${typeName}:\n${error}`);
-				loadingStateSearch = false;
-			});
-	}
-
-	function searchSelectPokemon(pokemonName: string) {
-		loadingStateSelect = true;
-		console.log(`searchSelecting for: ${pokemonName}`);
-		fetch(`http://localhost:8181/pokemon/detail/${pokemonName}`)
-			.then((response: Response) => response.json())
-			.then((obj: PokemonDetail) => {
-				pokemon = obj;
-				loadingStateSelect = false;
-			})
-			.catch((error) => {
-				console.log(`Error during /pokemon/detail/${pokemonName}:\n${error}`);
-				loadingStateSelect = false;
-			});
-	}
+	let { data } = $props<{ allTypes: TypesType[] }>();
+	let { allTypes } = $state<{ allTypes: TypesType[] }>(data);
 </script>
 
-<h1>pokeapi wrapper</h1>
-
-<h2>sidebar</h2>
-<ModeIndicator {searchMode} />
-
-{#if allTypes}
-	{#each allTypes as type}
-		<TypeCard onclick={() => searchPokemonByType(type.name)} {type} />
-	{/each}
-{:else}
-	<p>Loading...</p>
-{/if}
-
-<h2>main</h2>
-
-<input type="search" bind:value={searchString} />
-<button onclick={() => searchPokemon()}>search</button>
-
-<div>
-	{#if loadingStateSearch === true}
-		<p>Searching...</p>
-		<br />
-	{:else if pokemonPrimitiveArray}
-		{#each pokemonPrimitiveArray as pokemonPrimitive}
-			<PokemonPrimitiveCard
-				onclick={() => {
-					searchSelectPokemon(pokemonPrimitive.name);
-					showModal = true;
-				}}
-				{pokemonPrimitive}
-			/>
-		{/each}
-	{/if}
+<div class="flex">
+	<div class="pt-50 px-90 max-w-[calc(87.5%-0.25rem)] grow">
+		<!-- Main search and select -->
+		<SearchBar />
+		<div class="grid grid-cols-4">
+			{#if PokeSearch.loading === true}
+				<p class="text-sm">Searching...</p>
+			{:else if PokeSearch.data}
+				{#each PokeSearch.data as pokemonPrimitive}
+					<PokemonPrimitiveCard {pokemonPrimitive} />
+				{/each}
+			{/if}
+		</div>
+	</div>
+	<div class="h-auto w-0.5 bg-neutral-300 dark:bg-white/10"></div>
+	<div class="w-1/8">
+		<!-- Sidebar -->
+		<ModeIndicator />
+		<TypeCardList {allTypes} />
+	</div>
 </div>
-
-<PokemonDetailModal {showModal} {changeShowModal}>
-	<PokemonModalContent
-		{loadingStateSelect}
-		{pokemon}
-		{allTypes}
-		{changeShowModal}
-		serchType={(type: string) => searchPokemonByType(type)}
-		searchDetail={(pokemonName: string) => searchSelectPokemon(pokemonName)}
-	/>
+<PokemonDetailModal>
+	<PokemonModalContent {allTypes} />
 </PokemonDetailModal>
-
-<style>
-	div {
-		background-color: red;
-		width: fit-content;
-	}
-</style>
+<ErrorToast />

@@ -1,22 +1,27 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
+import httpx
+
+from app.pokeapi_requests import api_online
 from app.routers.initial import router as initial_router
 from app.routers.pokemon import router as pokemon_router
-from app.pokeapi_requests import api_online
-from fastapi.middleware.cors import CORSMiddleware
 
-app: FastAPI = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['http://localhost:8080'],
-    allow_methods=['*'],
-    allow_headers=['*'],
-)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    with httpx.Client() as client:
+        async with httpx.AsyncClient() as async_client:
+            app.state.client = client
+            app.state.async_client = async_client
+            yield
+
+
+app: FastAPI = FastAPI(lifespan=lifespan)
 
 
 @app.get('/')
 async def root() -> dict[str, str]:
-    pokeapi_state: str = 'Running' if api_online() else 'Offline'
+    pokeapi_state: str = 'Running' if api_online(app.state.client) else 'Offline'
     return {'description': f'Backend up and running, pokeapi is {pokeapi_state}'}
 
 

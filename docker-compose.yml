@@ -1,7 +1,6 @@
 services:
   backend:
     build: ./backend
-    #image: backend
     container_name: backend
     ports:
       - "8181:8181"
@@ -10,7 +9,6 @@ services:
 
   frontend:
     build: ./frontend
-    #image: frontend
     container_name: frontend
     ports:
       - "8080:3000"

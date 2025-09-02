@@ -2,7 +2,7 @@
     "include": ["app"],
     "exclude": ["**/__pycache__", "**/.pytest_cache", "**/venv", "**/env", "**/node_modules"],
     "venvPath": ".",
-    "venv": "venv",
+    "venv": ".venv",
     "typeCheckingMode": "strict",
     "pythonVersion": "3.11",
     "pythonPlatform": "Linux",
